@@ -5,35 +5,85 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cardápio – Boteco Municipal</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IM+Fell+English:ital@0;1&family=Cinzel+Decorative:wght@400;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IM+Fell+English:ital@0;1&family=Cinzel+Decorative:wght@400;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap');
 
 *{margin:0;padding:0;box-sizing:border-box}
+
+/* FONT PAIRS */
+body{
+  --f-display:'Playfair Display',serif;
+  --f-body:'Libre Baskerville',serif;
+  --f-accent:'IM Fell English',serif;
+}
+body.f-cormorant{
+  --f-display:'Cormorant Garamond',serif;
+  --f-body:'Cormorant Garamond',serif;
+  --f-accent:'Cormorant Garamond',serif;
+}
+body.f-garamond{
+  --f-display:'EB Garamond',serif;
+  --f-body:'EB Garamond',serif;
+  --f-accent:'EB Garamond',serif;
+}
+body.f-lora{
+  --f-display:'Lora',serif;
+  --f-body:'Lora',serif;
+  --f-accent:'Lora',serif;
+}
 
 /* THEMES */
 body.t-vintage{
   --bg:#f4ede0;--ink:#2c1a06;--gold:#b8922a;--gold2:#d4a843;
   --brown:#3d2008;--line:#b8922a;--body-bg:#6b5030;
   --taxa-bg:#3d2008;--taxa-fg:#f4ede0;--taxa-border:#b8922a;
+--logo-blend:multiply;
 }
 body.t-dark{
   --bg:#141210;--ink:#e8dcc8;--gold:#d4a843;--gold2:#e8c470;
   --brown:#e0c080;--line:#d4a843;--body-bg:#0a0906;
   --taxa-bg:#0d0b08;--taxa-fg:#d4a843;--taxa-border:#d4a843;
+--logo-blend:normal;
 }
 body.t-classic{
   --bg:#ffffff;--ink:#111111;--gold:#111111;--gold2:#444444;
   --brown:#111111;--line:#333333;--body-bg:#aaaaaa;
   --taxa-bg:#111111;--taxa-fg:#ffffff;--taxa-border:#111111;
+--logo-blend:multiply;
 }
 body.t-kraft{
   --bg:#c4a06a;--ink:#2a1500;--gold:#6b3510;--gold2:#8b5530;
   --brown:#3d1e05;--line:#6b3510;--body-bg:#8a6030;
   --taxa-bg:#3d1e05;--taxa-fg:#c4a06a;--taxa-border:#6b3510;
+--logo-blend:normal;
+}
+body.t-rubi{
+  --bg:#f9f2f0;--ink:#1a0508;--gold:#8b1a1a;--gold2:#b83232;
+  --brown:#6b0f0f;--line:#8b1a1a;--body-bg:#4a0808;
+  --taxa-bg:#1a0508;--taxa-fg:#f9f2f0;--taxa-border:#8b1a1a;
+--logo-blend:multiply;
+}
+body.t-floresta{
+  --bg:#0e1a10;--ink:#cce8c8;--gold:#76b842;--gold2:#9dd464;
+  --brown:#b4d888;--line:#76b842;--body-bg:#060d07;
+  --taxa-bg:#060d07;--taxa-fg:#76b842;--taxa-border:#76b842;
+--logo-blend:normal;
+}
+body.t-noite{
+  --bg:#0b0e1c;--ink:#d0d8f4;--gold:#8c9de0;--gold2:#aab4f0;
+  --brown:#b4bce8;--line:#8c9de0;--body-bg:#060810;
+  --taxa-bg:#060810;--taxa-fg:#8c9de0;--taxa-border:#8c9de0;
+--logo-blend:normal;
+}
+body.t-marfim{
+  --bg:#faf8f0;--ink:#1a1528;--gold:#2c3e6b;--gold2:#4a5c8f;
+  --brown:#1a2545;--line:#2c3e6b;--body-bg:#70788c;
+  --taxa-bg:#1a2545;--taxa-fg:#faf8f0;--taxa-border:#2c3e6b;
+--logo-blend:multiply;
 }
 
 body{
   background:var(--body-bg);
-  font-family:'Libre Baskerville',serif;
+  font-family:var(--f-body);
   color:var(--ink);
   transition:background .3s;
 }
@@ -41,42 +91,44 @@ body{
 /* ============ UI BAR ============ */
 #ui-bar{
   position:fixed;top:0;left:0;right:0;z-index:9999;
-  background:rgba(10,8,5,0.95);
+  background:rgba(10,8,5,0.97);
   backdrop-filter:blur(10px);
   display:flex;align-items:center;justify-content:space-between;
-  padding:10px 20px;gap:12px;
+  padding:8px 16px;gap:10px;
   border-bottom:1px solid rgba(212,168,67,0.3);
   flex-wrap:wrap;
 }
+.ui-group{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
 .ui-label{
   font-family:'Cinzel Decorative',serif;
-  font-size:10px;color:#d4a843;
+  font-size:9px;color:rgba(212,168,67,0.6);
   letter-spacing:2px;white-space:nowrap;
 }
-.theme-btns{display:flex;gap:6px;flex-wrap:wrap}
-.tbtn{
-  padding:5px 11px;
-  border:1.5px solid rgba(212,168,67,0.35);
+.theme-btns,.font-btns{display:flex;gap:4px;flex-wrap:wrap}
+.tbtn,.fbtn{
+  padding:4px 9px;
+  border:1.5px solid rgba(212,168,67,0.3);
   background:transparent;color:#d4a843;
   font-family:'Libre Baskerville',serif;
-  font-size:10px;letter-spacing:1px;
+  font-size:9px;letter-spacing:.5px;
   cursor:pointer;border-radius:2px;
   transition:all .2s;text-transform:uppercase;
 }
-.tbtn:hover{background:rgba(212,168,67,0.12);border-color:#d4a843}
-.tbtn.on{background:#d4a843;color:#1a1208;border-color:#d4a843;font-weight:700}
+.tbtn:hover,.fbtn:hover{background:rgba(212,168,67,0.1);border-color:#d4a843}
+.tbtn.on,.fbtn.on{background:#d4a843;color:#1a1208;border-color:#d4a843;font-weight:700}
+.ui-sep{width:1px;height:20px;background:rgba(212,168,67,0.2);flex-shrink:0}
 .edit-btn{
-  padding:7px 16px;background:transparent;color:#d4a843;
+  padding:6px 14px;background:transparent;color:#d4a843;
   border:1.5px solid #d4a843;font-family:'Cinzel Decorative',serif;
-  font-size:10px;letter-spacing:1px;cursor:pointer;
+  font-size:9px;letter-spacing:1px;cursor:pointer;
   border-radius:2px;white-space:nowrap;transition:all .2s;
 }
 .edit-btn:hover{background:rgba(212,168,67,0.15)}
 .edit-btn.active{background:#d4a843;color:#1a1208;}
 .dl-btn{
-  padding:7px 16px;background:#d4a843;color:#1a1208;
+  padding:6px 14px;background:#d4a843;color:#1a1208;
   border:none;font-family:'Cinzel Decorative',serif;
-  font-size:10px;letter-spacing:1px;cursor:pointer;
+  font-size:9px;letter-spacing:1px;cursor:pointer;
   border-radius:2px;white-space:nowrap;transition:opacity .2s;
 }
 .dl-btn:hover{opacity:.85}
@@ -160,7 +212,6 @@ body{
   width:90px;flex:none;text-align:right;
   font-family:'Playfair Display',serif;font-weight:700;
 }
-.ep-input.price-field{width:85px}
 .ep-del{
   background:rgba(180,50,50,0.2);border:1px solid rgba(180,50,50,0.4);
   color:#e07070;font-size:12px;width:26px;height:26px;
@@ -198,7 +249,7 @@ body.editing .mi,
 body.editing .si{cursor:default;position:relative}
 
 /* ============ PAGE ============ */
-.pages{margin-top:64px;padding:16px 0 32px;transition:margin-right .35s}
+.pages{margin-top:80px;padding:16px 0 32px;transition:margin-right .35s}
 body.panel-open .pages{margin-right:420px}
 .page{
   width:210mm;min-height:297mm;
@@ -232,20 +283,28 @@ body.panel-open .pages{margin-right:420px}
 
 /* HEADER */
 .hdr{text-align:center;margin-bottom:5mm;padding-bottom:4mm;border-bottom:1px solid var(--line)}
+/* LOGO — explicit per theme */
 .logo-wrap{
   width:72px;height:72px;margin:0 auto 2mm;
   display:flex;align-items:center;justify-content:center;
 }
 .logo-wrap img{
   width:100%;height:100%;object-fit:contain;
-  mix-blend-mode:multiply;
+  display:block;
 }
-body.t-dark .logo-wrap img,
-body.t-kraft .logo-wrap img{
-  filter:brightness(0) invert(1) sepia(1) saturate(2) hue-rotate(5deg);
-}
+/* temas claros: multiply remove halos brancos */
+body.t-vintage .logo-wrap img,
+body.t-classic .logo-wrap img,
+body.t-rubi    .logo-wrap img,
+body.t-marfim  .logo-wrap img { mix-blend-mode:multiply; }
+/* temas escuros: inverte para branco */
+body.t-dark     .logo-wrap img,
+body.t-floresta .logo-wrap img,
+body.t-noite    .logo-wrap img { filter:brightness(0) invert(1); mix-blend-mode:normal; }
+/* kraft: fundo médio-escuro, mostra natural */
+body.t-kraft .logo-wrap img { mix-blend-mode:normal; filter:none; }
 .tagline{
-  font-family:'IM Fell English',serif;font-style:italic;
+  font-family:var(--f-accent);font-style:italic;
   font-size:7.5pt;color:var(--gold);letter-spacing:2px;
   text-transform:uppercase;margin-top:1mm;
 }
@@ -266,12 +325,12 @@ body.t-kraft .logo-wrap img{
   z-index:0;
 }
 .ssub{
-  text-align:center;font-family:'IM Fell English',serif;
+  text-align:center;font-family:var(--f-accent);
   font-style:italic;font-size:7pt;color:var(--gold);
   letter-spacing:1px;text-transform:uppercase;margin-bottom:3mm;
 }
 .choose{
-  text-align:center;font-family:'Playfair Display',serif;
+  text-align:center;font-family:var(--f-display);
   font-size:7pt;color:var(--brown);letter-spacing:2px;
   text-transform:uppercase;margin-bottom:3mm;
 }
@@ -279,12 +338,12 @@ body.t-kraft .logo-wrap img{
 /* MENU ITEM */
 .mi{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1.8mm;gap:4mm}
 .mi-top{flex:1}
-.mn{font-family:'Playfair Display',serif;font-weight:700;font-size:8.5pt;color:var(--ink);text-transform:uppercase;letter-spacing:.5px}
-.mw{font-family:'IM Fell English',serif;font-size:6.5pt;color:var(--gold);font-style:italic}
-.md{font-family:'Libre Baskerville',serif;font-size:6.5pt;color:var(--gold2);font-style:italic;line-height:1.35;margin-top:.5mm}
+.mn{font-family:var(--f-display);font-weight:700;font-size:8.5pt;color:var(--ink);text-transform:uppercase;letter-spacing:.5px}
+.mw{font-family:var(--f-accent);font-size:6.5pt;color:var(--gold);font-style:italic}
+.md{font-family:var(--f-body);font-size:6.5pt;color:var(--gold2);font-style:italic;line-height:1.35;margin-top:.5mm}
 .dots{border-bottom:1px dotted var(--line);flex:1;min-width:10mm;opacity:.4;margin-bottom:2px}
 .price-display{
-  font-family:'Playfair Display',serif;font-weight:700;font-size:8pt;
+  font-family:var(--f-display);font-weight:700;font-size:8pt;
   color:var(--ink);flex-shrink:0;white-space:nowrap;min-width:18mm;
   text-align:right;
 }
@@ -296,21 +355,21 @@ body.t-kraft .logo-wrap img{
 
 /* TWO COL */
 .two{display:grid;grid-template-columns:1fr 1fr;gap:5mm}
-.ctitle{font-family:'Playfair Display',serif;font-size:8pt;font-weight:700;font-style:italic;color:var(--brown);letter-spacing:1px;margin-bottom:2mm}
+.ctitle{font-family:var(--f-display);font-size:8pt;font-weight:700;font-style:italic;color:var(--brown);letter-spacing:1px;margin-bottom:2mm}
 .si{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.8mm}
-.sn{font-family:'Libre Baskerville',serif;font-size:7pt;color:var(--ink);text-transform:uppercase;letter-spacing:.5px}
+.sn{font-family:var(--f-body);font-size:7pt;color:var(--ink);text-transform:uppercase;letter-spacing:.5px}
 .si .price-display{min-width:13mm;font-size:7.5pt}
 .si .blank{width:13mm}
 
 /* SPECIAL BOX */
 .sbox{border:1px solid var(--gold);padding:3mm 4mm;margin-top:2mm;background:rgba(184,146,42,.05)}
-.note{text-align:center;font-family:'IM Fell English',serif;font-size:6.5pt;color:var(--gold);font-style:italic;margin-top:2mm}
+.note{text-align:center;font-family:var(--f-accent);font-size:6.5pt;color:var(--gold);font-style:italic;margin-top:2mm}
 
 /* CHEF BADGE */
 .chef{margin-top:3.5mm;text-align:center;}
 .chef span{
   display:inline-block;background:var(--gold);color:var(--bg);
-  font-family:'Playfair Display',serif;font-size:7pt;
+  font-family:var(--f-display);font-size:7pt;
   padding:2.5mm 6mm;letter-spacing:1px;font-style:italic;
 }
 
@@ -345,12 +404,12 @@ body.t-kraft .logo-wrap img{
 .mi.sm .mn{font-size:7.5pt}
 .mi.sm .price-display{font-size:7.5pt;min-width:13mm}
 .mi.sm .blank{width:13mm}
-.caip{font-family:'Libre Baskerville',serif;font-size:6.5pt;font-style:italic;color:var(--gold);margin-bottom:1.5mm}
+.caip{font-family:var(--f-body);font-size:6.5pt;font-style:italic;color:var(--gold);margin-bottom:1.5mm}
 
 /* CHOPP */
 .chopp{border:1.5px solid var(--gold);padding:4mm;text-align:center;margin-top:4mm;}
 .chopp-t{font-family:'Cinzel Decorative',serif;font-size:9pt;color:var(--brown);letter-spacing:3px}
-.chopp-d{font-family:'IM Fell English',serif;font-style:italic;font-size:7.5pt;color:var(--gold);margin-top:1mm}
+.chopp-d{font-family:var(--f-accent);font-style:italic;font-size:7.5pt;color:var(--gold);margin-top:1mm}
 
 /* PRINT */
 @media print{
@@ -361,6 +420,8 @@ body.t-kraft .logo-wrap img{
   .page{margin:0;box-shadow:none;page-break-after:always;width:210mm;min-height:297mm}
   .page:last-child{page-break-after:avoid}
 }
+</style>
+<style id="dynamic-styles"></style>
 
 /* NOTIFICATION */
 #notify{
@@ -380,15 +441,33 @@ body.t-kraft .logo-wrap img{
 
 <!-- UI BAR -->
 <div id="ui-bar">
-  <span class="ui-label">Boteco Municipal · Cardápio</span>
-  <div class="theme-btns">
-    <button class="tbtn on" onclick="setTheme('vintage',this)">Vintage</button>
-    <button class="tbtn" onclick="setTheme('dark',this)">Dark</button>
-    <button class="tbtn" onclick="setTheme('classic',this)">Clásico</button>
-    <button class="tbtn" onclick="setTheme('kraft',this)">Kraft</button>
+  <span class="ui-label" style="color:#d4a843;font-size:10px">Boteco Municipal</span>
+  <div class="ui-group">
+    <span class="ui-label">Tema</span>
+    <div class="theme-btns">
+      <button class="tbtn on" onclick="setTheme('vintage',this)">Vintage</button>
+      <button class="tbtn" onclick="setTheme('dark',this)">Dark</button>
+      <button class="tbtn" onclick="setTheme('classic',this)">Clássico</button>
+      <button class="tbtn" onclick="setTheme('kraft',this)">Kraft</button>
+      <button class="tbtn" onclick="setTheme('rubi',this)">Rubi</button>
+      <button class="tbtn" onclick="setTheme('floresta',this)">Floresta</button>
+      <button class="tbtn" onclick="setTheme('noite',this)">Noite</button>
+      <button class="tbtn" onclick="setTheme('marfim',this)">Marfim</button>
+    </div>
   </div>
-  <button class="edit-btn" id="toggleEdit" onclick="toggleEditPanel()">✏ Editar Cardápio</button>
-  <button class="dl-btn" onclick="window.print()">⬇ Imprimir / PDF</button>
+  <div class="ui-sep"></div>
+  <div class="ui-group">
+    <span class="ui-label">Fonte</span>
+    <div class="font-btns">
+      <button class="fbtn on" onclick="setFont('classic',this)">Clássica</button>
+      <button class="fbtn" onclick="setFont('cormorant',this)">Elegante</button>
+      <button class="fbtn" onclick="setFont('garamond',this)">Literária</button>
+      <button class="fbtn" onclick="setFont('lora',this)">Refinada</button>
+    </div>
+  </div>
+  <div class="ui-sep"></div>
+  <button class="edit-btn" id="toggleEdit" onclick="toggleEditPanel()">✏ Editar</button>
+  <button class="dl-btn" onclick="window.print()">⬇ PDF</button>
 </div>
 
 <!-- EDIT PANEL -->
@@ -405,6 +484,7 @@ body.t-kraft .logo-wrap img{
     <button class="ep-tab" onclick="switchTab(4,this)">Doses</button>
     <button class="ep-tab" onclick="switchTab(5,this)">Bebidas</button>
     <button class="ep-tab" onclick="switchTab(6,this)">Drinks</button>
+    <button class="ep-tab" onclick="switchTab(7,this)">✦ Estilos</button>
   </div>
   <div class="ep-body" id="ep-body"></div>
   <div class="ep-apply">
@@ -769,6 +849,109 @@ function setTheme(t, btn) {
   document.querySelectorAll('.stitle h2').forEach(el=>{el.style.background='var(--bg)'});
 }
 
+// ============ FONT ============
+function setFont(f, btn) {
+  document.body.className = document.body.className.replace(/f-\w+/,'').trim();
+  if(f !== 'classic') document.body.className += ' f-' + f;
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+// ============ STYLE CONFIG ============
+const styleConfig = {
+  itemNameSize:    8.5,
+  itemNameSpacing: 0.5,
+  itemNameWeight:  700,
+  priceSize:       8.0,
+  sectionSize:    10.5,
+  sectionSpacing:  3,
+  descSize:        6.5,
+  subSize:         6.5,
+  taglineSize:     7.5,
+  taxaSize:        8.0,
+  itemSpacing:     1.8,
+  logoSize:        72,
+  pageMarginH:     12,
+  pageMarginV:     14,
+};
+
+function applyDynStyles() {
+  const s = styleConfig;
+  document.getElementById('dynamic-styles').textContent = `
+    .mn { font-size:${s.itemNameSize}pt !important; letter-spacing:${s.itemNameSpacing}px !important; font-weight:${s.itemNameWeight} !important; }
+    .price-display { font-size:${s.priceSize}pt !important; }
+    .stitle h2 { font-size:${s.sectionSize}pt !important; letter-spacing:${s.sectionSpacing}px !important; }
+    .md { font-size:${s.descSize}pt !important; }
+    .mw { font-size:${s.subSize}pt !important; }
+    .tagline { font-size:${s.taglineSize}pt !important; }
+    .taxa-text { font-size:${s.taxaSize}pt !important; }
+    .mi { margin-bottom:${s.itemSpacing}mm !important; }
+    .logo-wrap { width:${s.logoSize}px !important; height:${s.logoSize}px !important; }
+    .page { padding:${s.pageMarginV}mm ${s.pageMarginH}mm !important; }
+  `;
+}
+
+function renderStyleTab() {
+  const body = document.getElementById('ep-body');
+  const s = styleConfig;
+
+  const row = (label, key, min, max, step, unit='pt') => `
+    <div class="ep-item" style="padding:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div class="ep-label" style="font-size:10px;color:#d4a843">${label}</div>
+        <span id="sv-${key}" style="font-family:'Playfair Display',serif;color:#e8dcc8;font-size:12px;min-width:40px;text-align:right">${s[key]}${unit}</span>
+      </div>
+      <input type="range" min="${min}" max="${max}" step="${step}" value="${s[key]}"
+        style="width:100%;accent-color:#d4a843;cursor:pointer"
+        oninput="styleConfig['${key}']=parseFloat(this.value);document.getElementById('sv-${key}').textContent=this.value+'${unit}';applyDynStyles()">
+    </div>`;
+
+  body.innerHTML = `
+    <div class="ep-section">
+      <div class="ep-section-title">Nomes dos Itens</div>
+      ${row('Tamanho', 'itemNameSize', 5, 16, 0.5)}
+      ${row('Espaçamento letras', 'itemNameSpacing', -1, 5, 0.25, 'px')}
+      ${row('Peso (400=normal 700=bold)', 'itemNameWeight', 400, 900, 100, '')}
+    </div>
+    <div class="ep-section">
+      <div class="ep-section-title">Preços</div>
+      ${row('Tamanho', 'priceSize', 5, 16, 0.5)}
+    </div>
+    <div class="ep-section">
+      <div class="ep-section-title">Títulos de Seção</div>
+      ${row('Tamanho', 'sectionSize', 6, 20, 0.5)}
+      ${row('Espaçamento letras', 'sectionSpacing', 0, 10, 0.5, 'px')}
+    </div>
+    <div class="ep-section">
+      <div class="ep-section-title">Textos Secundários</div>
+      ${row('Descrições (.md)', 'descSize', 4, 12, 0.5)}
+      ${row('Gramagem/subtítulo (.mw)', 'subSize', 4, 12, 0.5)}
+      ${row('Tagline (Bar & Rest.)', 'taglineSize', 4, 14, 0.5)}
+      ${row('Taxa de serviço', 'taxaSize', 4, 14, 0.5)}
+    </div>
+    <div class="ep-section">
+      <div class="ep-section-title">Layout & Espaçamento</div>
+      ${row('Espaço entre itens', 'itemSpacing', 0, 6, 0.25, 'mm')}
+      ${row('Tamanho do logo', 'logoSize', 32, 120, 4, 'px')}
+      ${row('Margens horizontais da página', 'pageMarginH', 6, 25, 1, 'mm')}
+      ${row('Margens verticais da página', 'pageMarginV', 6, 25, 1, 'mm')}
+    </div>
+    <div style="padding:10px 0">
+      <button class="ep-add-btn" onclick="resetStyles()">↺ Restaurar padrões</button>
+    </div>
+  `;
+}
+
+function resetStyles() {
+  styleConfig.itemNameSize=8.5; styleConfig.itemNameSpacing=0.5; styleConfig.itemNameWeight=700;
+  styleConfig.priceSize=8; styleConfig.sectionSize=10.5; styleConfig.sectionSpacing=3;
+  styleConfig.descSize=6.5; styleConfig.subSize=6.5; styleConfig.taglineSize=7.5;
+  styleConfig.taxaSize=8; styleConfig.itemSpacing=1.8; styleConfig.logoSize=72;
+  styleConfig.pageMarginH=12; styleConfig.pageMarginV=14;
+  applyDynStyles();
+  renderStyleTab();
+}
+
 // ============ PANEL ============
 let panelOpen = false;
 let currentTab = 0;
@@ -786,6 +969,7 @@ function switchTab(idx, btn) {
   currentTab = idx;
   document.querySelectorAll('.ep-tab').forEach(t=>t.classList.remove('on'));
   btn.classList.add('on');
+  if(idx === 7) { renderStyleTab(); return; }
   renderTab(idx);
 }
 
@@ -989,6 +1173,7 @@ function showNotify() {
 
 // ============ INIT ============
 initFromDOM();
+applyDynStyles();
 </script>
 </body>
 </html>
