@@ -38,23 +38,24 @@ body{
   transition:background .3s;
 }
 
-/* UI BAR */
+/* ============ UI BAR ============ */
 #ui-bar{
   position:fixed;top:0;left:0;right:0;z-index:9999;
-  background:rgba(10,8,5,0.92);
+  background:rgba(10,8,5,0.95);
   backdrop-filter:blur(10px);
   display:flex;align-items:center;justify-content:space-between;
-  padding:10px 24px;gap:16px;
+  padding:10px 20px;gap:12px;
   border-bottom:1px solid rgba(212,168,67,0.3);
+  flex-wrap:wrap;
 }
 .ui-label{
   font-family:'Cinzel Decorative',serif;
   font-size:10px;color:#d4a843;
   letter-spacing:2px;white-space:nowrap;
 }
-.theme-btns{display:flex;gap:8px;flex-wrap:wrap}
+.theme-btns{display:flex;gap:6px;flex-wrap:wrap}
 .tbtn{
-  padding:5px 13px;
+  padding:5px 11px;
   border:1.5px solid rgba(212,168,67,0.35);
   background:transparent;color:#d4a843;
   font-family:'Libre Baskerville',serif;
@@ -64,16 +65,141 @@ body{
 }
 .tbtn:hover{background:rgba(212,168,67,0.12);border-color:#d4a843}
 .tbtn.on{background:#d4a843;color:#1a1208;border-color:#d4a843;font-weight:700}
+.edit-btn{
+  padding:7px 16px;background:transparent;color:#d4a843;
+  border:1.5px solid #d4a843;font-family:'Cinzel Decorative',serif;
+  font-size:10px;letter-spacing:1px;cursor:pointer;
+  border-radius:2px;white-space:nowrap;transition:all .2s;
+}
+.edit-btn:hover{background:rgba(212,168,67,0.15)}
+.edit-btn.active{background:#d4a843;color:#1a1208;}
 .dl-btn{
-  padding:7px 18px;background:#d4a843;color:#1a1208;
+  padding:7px 16px;background:#d4a843;color:#1a1208;
   border:none;font-family:'Cinzel Decorative',serif;
   font-size:10px;letter-spacing:1px;cursor:pointer;
   border-radius:2px;white-space:nowrap;transition:opacity .2s;
 }
 .dl-btn:hover{opacity:.85}
 
-/* PAGE */
-.pages{margin-top:64px;padding:16px 0 32px}
+/* ============ EDIT PANEL ============ */
+#edit-panel{
+  position:fixed;top:0;right:0;bottom:0;width:420px;z-index:9998;
+  background:#0e0c09;border-left:1px solid rgba(212,168,67,0.3);
+  display:flex;flex-direction:column;
+  transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);
+  overflow:hidden;
+}
+#edit-panel.open{transform:translateX(0)}
+.ep-header{
+  background:#1a1409;padding:18px 20px 14px;
+  border-bottom:1px solid rgba(212,168,67,0.25);
+  flex-shrink:0;
+}
+.ep-title{
+  font-family:'Cinzel Decorative',serif;font-size:12px;
+  color:#d4a843;letter-spacing:3px;text-transform:uppercase;
+}
+.ep-sub{
+  font-family:'Libre Baskerville',serif;font-size:10px;
+  color:rgba(212,168,67,0.5);margin-top:3px;letter-spacing:.5px;
+}
+.ep-tabs{
+  display:flex;background:#0a0806;
+  border-bottom:1px solid rgba(212,168,67,0.2);
+  flex-shrink:0;overflow-x:auto;
+}
+.ep-tab{
+  padding:10px 14px;font-family:'Libre Baskerville',serif;
+  font-size:10px;color:rgba(212,168,67,0.5);letter-spacing:.5px;
+  cursor:pointer;border-bottom:2px solid transparent;
+  transition:all .2s;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;
+  text-transform:uppercase;
+}
+.ep-tab:hover{color:#d4a843}
+.ep-tab.on{color:#d4a843;border-bottom-color:#d4a843;background:rgba(212,168,67,0.05)}
+.ep-body{
+  flex:1;overflow-y:auto;padding:16px;
+}
+.ep-body::-webkit-scrollbar{width:4px}
+.ep-body::-webkit-scrollbar-track{background:#0a0806}
+.ep-body::-webkit-scrollbar-thumb{background:#d4a843;border-radius:2px}
+
+/* SECTION BLOCK */
+.ep-section{margin-bottom:20px}
+.ep-section-title{
+  font-family:'Cinzel Decorative',serif;font-size:9px;
+  color:#d4a843;letter-spacing:2px;text-transform:uppercase;
+  padding-bottom:8px;border-bottom:1px solid rgba(212,168,67,0.2);
+  margin-bottom:10px;
+}
+
+/* ITEM ROW */
+.ep-item{
+  background:#1a1409;border:1px solid rgba(212,168,67,0.15);
+  border-radius:3px;padding:10px 12px;margin-bottom:8px;
+  position:relative;
+}
+.ep-item:hover{border-color:rgba(212,168,67,0.35)}
+.ep-row{display:flex;gap:8px;margin-bottom:6px;align-items:center}
+.ep-row:last-child{margin-bottom:0}
+.ep-field{
+  flex:1;display:flex;flex-direction:column;gap:3px;
+}
+.ep-label{
+  font-family:'Libre Baskerville',serif;font-size:9px;
+  color:rgba(212,168,67,0.5);text-transform:uppercase;letter-spacing:.5px;
+}
+.ep-input{
+  background:#0a0806;border:1px solid rgba(212,168,67,0.2);
+  color:#e8dcc8;font-family:'Libre Baskerville',serif;font-size:11px;
+  padding:6px 8px;border-radius:2px;width:100%;
+  transition:border-color .2s;
+}
+.ep-input:focus{outline:none;border-color:#d4a843}
+.ep-input.price{
+  width:90px;flex:none;text-align:right;
+  font-family:'Playfair Display',serif;font-weight:700;
+}
+.ep-input.price-field{width:85px}
+.ep-del{
+  background:rgba(180,50,50,0.2);border:1px solid rgba(180,50,50,0.4);
+  color:#e07070;font-size:12px;width:26px;height:26px;
+  cursor:pointer;border-radius:2px;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;transition:all .2s;
+}
+.ep-del:hover{background:rgba(180,50,50,0.4);color:#fff}
+
+/* ADD BUTTONS */
+.ep-add-btn{
+  width:100%;padding:8px;background:transparent;
+  border:1px dashed rgba(212,168,67,0.3);color:rgba(212,168,67,0.6);
+  font-family:'Libre Baskerville',serif;font-size:10px;
+  letter-spacing:1px;cursor:pointer;border-radius:2px;
+  transition:all .2s;text-transform:uppercase;margin-top:4px;
+}
+.ep-add-btn:hover{border-color:#d4a843;color:#d4a843;background:rgba(212,168,67,0.05)}
+
+/* APPLY BTN */
+.ep-apply{
+  padding:12px 20px;background:rgba(212,168,67,0.08);
+  border-top:1px solid rgba(212,168,67,0.2);
+  flex-shrink:0;
+}
+.ep-apply-btn{
+  width:100%;padding:10px;background:#d4a843;color:#1a1208;
+  border:none;font-family:'Cinzel Decorative',serif;font-size:11px;
+  letter-spacing:2px;cursor:pointer;border-radius:2px;
+  transition:opacity .2s;text-transform:uppercase;
+}
+.ep-apply-btn:hover{opacity:.85}
+
+/* EDIT MODE OVERLAY on page items */
+body.editing .mi,
+body.editing .si{cursor:default;position:relative}
+
+/* ============ PAGE ============ */
+.pages{margin-top:64px;padding:16px 0 32px;transition:margin-right .35s}
+body.panel-open .pages{margin-right:420px}
 .page{
   width:210mm;min-height:297mm;
   background:var(--bg);
@@ -157,6 +283,11 @@ body.t-kraft .logo-wrap img{
 .mw{font-family:'IM Fell English',serif;font-size:6.5pt;color:var(--gold);font-style:italic}
 .md{font-family:'Libre Baskerville',serif;font-size:6.5pt;color:var(--gold2);font-style:italic;line-height:1.35;margin-top:.5mm}
 .dots{border-bottom:1px dotted var(--line);flex:1;min-width:10mm;opacity:.4;margin-bottom:2px}
+.price-display{
+  font-family:'Playfair Display',serif;font-weight:700;font-size:8pt;
+  color:var(--ink);flex-shrink:0;white-space:nowrap;min-width:18mm;
+  text-align:right;
+}
 .blank{width:18mm;border-bottom:1.5px solid var(--ink);flex-shrink:0;opacity:.5}
 .pline{display:flex;align-items:center;gap:2mm;flex-shrink:0}
 
@@ -168,6 +299,7 @@ body.t-kraft .logo-wrap img{
 .ctitle{font-family:'Playfair Display',serif;font-size:8pt;font-weight:700;font-style:italic;color:var(--brown);letter-spacing:1px;margin-bottom:2mm}
 .si{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.8mm}
 .sn{font-family:'Libre Baskerville',serif;font-size:7pt;color:var(--ink);text-transform:uppercase;letter-spacing:.5px}
+.si .price-display{min-width:13mm;font-size:7.5pt}
 .si .blank{width:13mm}
 
 /* SPECIAL BOX */
@@ -175,9 +307,7 @@ body.t-kraft .logo-wrap img{
 .note{text-align:center;font-family:'IM Fell English',serif;font-size:6.5pt;color:var(--gold);font-style:italic;margin-top:2mm}
 
 /* CHEF BADGE */
-.chef{
-  margin-top:3.5mm;text-align:center;
-}
+.chef{margin-top:3.5mm;text-align:center;}
 .chef span{
   display:inline-block;background:var(--gold);color:var(--bg);
   font-family:'Playfair Display',serif;font-size:7pt;
@@ -185,9 +315,7 @@ body.t-kraft .logo-wrap img{
 }
 
 /* TAXA FOOTER */
-.taxa{
-  margin-top:auto;padding-top:4mm;
-}
+.taxa{margin-top:auto;padding-top:4mm;}
 .taxa-inner{
   border:1.5px solid var(--taxa-border);
   background:var(--taxa-bg);
@@ -215,28 +343,40 @@ body.t-kraft .logo-wrap img{
 .drinks-col{display:flex;flex-direction:column;gap:3mm}
 .dcol-box{border:1px solid rgba(184,146,42,.25);padding:3mm}
 .mi.sm .mn{font-size:7.5pt}
+.mi.sm .price-display{font-size:7.5pt;min-width:13mm}
 .mi.sm .blank{width:13mm}
 .caip{font-family:'Libre Baskerville',serif;font-size:6.5pt;font-style:italic;color:var(--gold);margin-bottom:1.5mm}
 
 /* CHOPP */
-.chopp{
-  border:1.5px solid var(--gold);padding:4mm;
-  text-align:center;margin-top:4mm;
-}
+.chopp{border:1.5px solid var(--gold);padding:4mm;text-align:center;margin-top:4mm;}
 .chopp-t{font-family:'Cinzel Decorative',serif;font-size:9pt;color:var(--brown);letter-spacing:3px}
 .chopp-d{font-family:'IM Fell English',serif;font-style:italic;font-size:7.5pt;color:var(--gold);margin-top:1mm}
 
 /* PRINT */
 @media print{
   #ui-bar{display:none}
+  #edit-panel{display:none}
   body{background:white}
-  .pages{margin-top:0;padding:0}
+  .pages{margin-top:0;padding:0;margin-right:0!important}
   .page{margin:0;box-shadow:none;page-break-after:always;width:210mm;min-height:297mm}
   .page:last-child{page-break-after:avoid}
 }
+
+/* NOTIFICATION */
+#notify{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:#d4a843;color:#1a1208;
+  font-family:'Cinzel Decorative',serif;font-size:10px;letter-spacing:2px;
+  padding:10px 24px;border-radius:2px;z-index:99999;
+  transition:transform .3s cubic-bezier(.4,0,.2,1);pointer-events:none;
+}
+#notify.show{transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body class="t-vintage">
+
+<!-- NOTIFICATION -->
+<div id="notify">✦ Cardápio atualizado ✦</div>
 
 <!-- UI BAR -->
 <div id="ui-bar">
@@ -247,13 +387,32 @@ body.t-kraft .logo-wrap img{
     <button class="tbtn" onclick="setTheme('classic',this)">Clásico</button>
     <button class="tbtn" onclick="setTheme('kraft',this)">Kraft</button>
   </div>
-  <button class="dl-btn" onclick="window.print()">⬇ Imprimir / Salvar PDF</button>
+  <button class="edit-btn" id="toggleEdit" onclick="toggleEditPanel()">✏ Editar Cardápio</button>
+  <button class="dl-btn" onclick="window.print()">⬇ Imprimir / PDF</button>
 </div>
 
-<div class="pages">
+<!-- EDIT PANEL -->
+<div id="edit-panel">
+  <div class="ep-header">
+    <div class="ep-title">✦ Editor de Cardápio</div>
+    <div class="ep-sub">Edite nomes, preços e descrições · Adicione ou remova itens</div>
+  </div>
+  <div class="ep-tabs">
+    <button class="ep-tab on" onclick="switchTab(0,this)">Almoço</button>
+    <button class="ep-tab" onclick="switchTab(1,this)">Sanduíches</button>
+    <button class="ep-tab" onclick="switchTab(2,this)">Porções</button>
+    <button class="ep-tab" onclick="switchTab(3,this)">Cervejas</button>
+    <button class="ep-tab" onclick="switchTab(4,this)">Doses</button>
+    <button class="ep-tab" onclick="switchTab(5,this)">Bebidas</button>
+    <button class="ep-tab" onclick="switchTab(6,this)">Drinks</button>
+  </div>
+  <div class="ep-body" id="ep-body"></div>
+  <div class="ep-apply">
+    <button class="ep-apply-btn" onclick="applyAll()">✦ Aplicar Alterações</button>
+  </div>
+</div>
 
-<!-- ============ CORNER SNIPPET ============ -->
-<!-- reusable corner SVG -->
+<div class="pages" id="pages">
 
 <!-- ============ PAGE 1: ALMOÇO ============ -->
 <div class="page">
@@ -272,15 +431,17 @@ body.t-kraft .logo-wrap img{
   <p class="ssub">Acompanhamento padrão: Arroz · Feijão · Salada · Fritas · Farofa</p>
   <p class="choose">— Escolha sua proteína —</p>
 
-  <div class="mi"><div class="mi-top"><div class="mn">Alcatra</div><div class="mw">+/– 150g</div></div><div class="pline"><span class="dots"></span><span class="blank"></span></div></div>
-  <div class="mi"><div class="mi-top"><div class="mn">Bife de Ancho</div><div class="mw">+/– 200g</div></div><div class="pline"><span class="dots"></span><span class="blank"></span></div></div>
-  <div class="mi"><div class="mi-top"><div class="mn">Bisteca Suína</div><div class="mw">+/– 160g</div></div><div class="pline"><span class="dots"></span><span class="blank"></span></div></div>
-  <div class="mi"><div class="mi-top"><div class="mn">Bife de Alcatra</div><div class="mw">+/– 100g</div></div><div class="pline"><span class="dots"></span><span class="blank"></span></div></div>
-  <div class="mi"><div class="mi-top"><div class="mn">Contra Filé</div><div class="mw">+/– 200g</div></div><div class="pline"><span class="dots"></span><span class="blank"></span></div></div>
-  <div class="mi"><div class="mi-top"><div class="mn">Peito de Frango</div><div class="mw">+/– 120g</div></div><div class="pline"><span class="dots"></span><span class="blank"></span></div></div>
-  <div class="mi"><div class="mi-top"><div class="mn">Picanha</div><div class="mw">+/– 200g</div></div><div class="pline"><span class="dots"></span><span class="blank"></span></div></div>
-  <div class="mi"><div class="mi-top"><div class="mn">Sobrecoxa em Cubos</div><div class="mw">+/– 200g</div></div><div class="pline"><span class="dots"></span><span class="blank"></span></div></div>
-  <div class="mi"><div class="mi-top"><div class="mn">Vegetariano</div><div class="mw">2 ovos</div></div><div class="pline"><span class="dots"></span><span class="blank"></span></div></div>
+  <div id="almoco-list">
+    <div class="mi" data-section="almoco" data-idx="0"><div class="mi-top"><div class="mn">Alcatra</div><div class="mw">+/– 150g</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+    <div class="mi" data-section="almoco" data-idx="1"><div class="mi-top"><div class="mn">Bife de Ancho</div><div class="mw">+/– 200g</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+    <div class="mi" data-section="almoco" data-idx="2"><div class="mi-top"><div class="mn">Bisteca Suína</div><div class="mw">+/– 160g</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+    <div class="mi" data-section="almoco" data-idx="3"><div class="mi-top"><div class="mn">Bife de Alcatra</div><div class="mw">+/– 100g</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+    <div class="mi" data-section="almoco" data-idx="4"><div class="mi-top"><div class="mn">Contra Filé</div><div class="mw">+/– 200g</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+    <div class="mi" data-section="almoco" data-idx="5"><div class="mi-top"><div class="mn">Peito de Frango</div><div class="mw">+/– 120g</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+    <div class="mi" data-section="almoco" data-idx="6"><div class="mi-top"><div class="mn">Picanha</div><div class="mw">+/– 200g</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+    <div class="mi" data-section="almoco" data-idx="7"><div class="mi-top"><div class="mn">Sobrecoxa em Cubos</div><div class="mw">+/– 200g</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+    <div class="mi" data-section="almoco" data-idx="8"><div class="mi-top"><div class="mn">Vegetariano</div><div class="mw">2 ovos</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+  </div>
 
   <div class="dline"></div>
 
@@ -290,15 +451,15 @@ body.t-kraft .logo-wrap img{
   <div class="two">
     <div>
       <div class="ctitle">Mignon</div>
-      <div class="si"><span class="sn">Individual</span><span class="blank"></span></div>
-      <div class="si"><span class="sn">Duas pessoas</span><span class="blank"></span></div>
-      <div class="si"><span class="sn">Três pessoas</span><span class="blank"></span></div>
+      <div class="si" data-section="parmegiana" data-idx="0"><span class="sn">Individual</span><span class="price-display"></span></div>
+      <div class="si" data-section="parmegiana" data-idx="1"><span class="sn">Duas pessoas</span><span class="price-display"></span></div>
+      <div class="si" data-section="parmegiana" data-idx="2"><span class="sn">Três pessoas</span><span class="price-display"></span></div>
     </div>
     <div>
       <div class="ctitle">Frango</div>
-      <div class="si"><span class="sn">Individual</span><span class="blank"></span></div>
-      <div class="si"><span class="sn">Duas pessoas</span><span class="blank"></span></div>
-      <div class="si"><span class="sn">Três pessoas</span><span class="blank"></span></div>
+      <div class="si" data-section="parmegiana" data-idx="3"><span class="sn">Individual</span><span class="price-display"></span></div>
+      <div class="si" data-section="parmegiana" data-idx="4"><span class="sn">Duas pessoas</span><span class="price-display"></span></div>
+      <div class="si" data-section="parmegiana" data-idx="5"><span class="sn">Três pessoas</span><span class="price-display"></span></div>
     </div>
   </div>
   <p class="note">✦ Somente aos sábados e domingos ✦</p>
@@ -309,8 +470,8 @@ body.t-kraft .logo-wrap img{
   <p class="ssub" style="margin-bottom:2mm">Somente aos sábados</p>
 
   <div class="sbox">
-    <div class="si"><span class="sn">Individual</span><span class="blank"></span></div>
-    <div class="si" style="margin-bottom:0"><span class="sn">Duas pessoas</span><span class="blank"></span></div>
+    <div class="si" data-section="feijoada" data-idx="0"><span class="sn">Individual</span><span class="price-display"></span></div>
+    <div class="si" style="margin-bottom:0" data-section="feijoada" data-idx="1"><span class="sn">Duas pessoas</span><span class="price-display"></span></div>
   </div>
 
   <div class="chef"><span>Prato do Chef — consultar garçom</span></div>
@@ -318,14 +479,10 @@ body.t-kraft .logo-wrap img{
   <div class="taxa">
     <div class="taxa-inner">
       <span class="taxa-star">✦</span>
-      <div class="taxa-text">
-        Taxa de Serviço 10%
-        <em>Opcional — a critério do cliente</em>
-      </div>
+      <div class="taxa-text">Taxa de Serviço 10%<em>Opcional — a critério do cliente</em></div>
       <span class="taxa-star">✦</span>
     </div>
   </div>
-
 </div>
 </div>
 
@@ -343,99 +500,74 @@ body.t-kraft .logo-wrap img{
   </div>
 
   <div class="split">
-    <!-- SANDUÍCHE -->
     <div class="split-col">
       <div class="stitle"><h2 style="font-size:10pt">Sanduíche</h2></div>
-
-      <div class="mi" style="align-items:flex-start;margin-bottom:3mm">
-        <div class="mi-top">
-          <div class="mn">Pão com Bolinho</div>
-          <div class="md">Blend de carnes, temperos, ervas e especiarias. Maionese com alho e bacon, creme de queijo cheddar e cebolinha. Pão francês, acompanha batata frita</div>
+      <div id="sanduiche-list">
+        <div class="mi" style="align-items:flex-start;margin-bottom:3mm" data-section="sanduiche" data-idx="0">
+          <div class="mi-top">
+            <div class="mn">Pão com Bolinho</div>
+            <div class="md">Blend de carnes, temperos, ervas e especiarias. Maionese com alho e bacon, creme de queijo cheddar e cebolinha. Pão francês, acompanha batata frita</div>
+          </div>
+          <span class="price-display" style="margin-top:2px"></span>
         </div>
-        <span class="blank" style="margin-top:2px"></span>
-      </div>
-
-      <div class="mi" style="align-items:flex-start;margin-bottom:3mm">
-        <div class="mi-top">
-          <div class="mn">Pork</div>
-          <div class="md">Lombo de porco, mel, barbecue, especiarias, rúcula e queijo mussarela</div>
+        <div class="mi" style="align-items:flex-start;margin-bottom:3mm" data-section="sanduiche" data-idx="1">
+          <div class="mi-top">
+            <div class="mn">Pork</div>
+            <div class="md">Lombo de porco, mel, barbecue, especiarias, rúcula e queijo mussarela</div>
+          </div>
+          <span class="price-display" style="margin-top:2px"></span>
         </div>
-        <span class="blank" style="margin-top:2px"></span>
-      </div>
-
-      <div class="mi" style="align-items:flex-start;margin-bottom:3mm">
-        <div class="mi-top">
-          <div class="mn">Pão com Bifé de Alcatra</div>
-          <div class="md">Bife e maionese · +R$3 queijo · +R$3 ovo</div>
+        <div class="mi" style="align-items:flex-start;margin-bottom:3mm" data-section="sanduiche" data-idx="2">
+          <div class="mi-top">
+            <div class="mn">Pão com Bifé de Alcatra</div>
+            <div class="md">Bife e maionese · +R$3 queijo · +R$3 ovo</div>
+          </div>
+          <span class="price-display" style="margin-top:2px"></span>
         </div>
-        <span class="blank" style="margin-top:2px"></span>
-      </div>
-
-      <div class="mi" style="align-items:flex-start;margin-bottom:3mm">
-        <div class="mi-top">
-          <div class="mn">Pão com Linguiça</div>
-          <div class="md">Calabresa na chapa com cebola e ervas frescas · +R$3 queijo · +R$3 ovo</div>
+        <div class="mi" style="align-items:flex-start;margin-bottom:3mm" data-section="sanduiche" data-idx="3">
+          <div class="mi-top">
+            <div class="mn">Pão com Linguiça</div>
+            <div class="md">Calabresa na chapa com cebola e ervas frescas · +R$3 queijo · +R$3 ovo</div>
+          </div>
+          <span class="price-display" style="margin-top:2px"></span>
         </div>
-        <span class="blank" style="margin-top:2px"></span>
-      </div>
-
-      <div class="mi" style="align-items:flex-start">
-        <div class="mi-top">
-          <div class="mn">Sanduíche de Panceta</div>
-          <div class="md">Panceta marinada na cachaça e chopp, especiarias, salsinha, cebolinha e coentro, molho mostarda e mel. Pão francês</div>
+        <div class="mi" style="align-items:flex-start" data-section="sanduiche" data-idx="4">
+          <div class="mi-top">
+            <div class="mn">Sanduíche de Panceta</div>
+            <div class="md">Panceta marinada na cachaça e chopp, especiarias, salsinha, cebolinha e coentro, molho mostarda e mel. Pão francês</div>
+          </div>
+          <span class="price-display" style="margin-top:2px"></span>
         </div>
-        <span class="blank" style="margin-top:2px"></span>
       </div>
     </div>
 
-    <!-- PORÇÕES -->
     <div class="split-col">
       <div class="stitle"><h2 style="font-size:10pt">Porções</h2></div>
-
-      <div class="mi"><div class="mi-top"><div class="mn">Batata Frita</div><div class="mw">Porção 400g</div></div><div class="pline"><span class="dots"></span><span class="blank"></span></div></div>
-      <div class="mi"><div class="mi-top"><div class="mn">Batata Frita</div><div class="mw">Meia porção 200g</div></div><div class="pline"><span class="dots"></span><span class="blank"></span></div></div>
-
-      <div class="mi"><div class="mi-top"><div class="mn">Batata Cheddar e Bacon</div><div class="mw">Porção 400g</div></div><div class="pline"><span class="dots"></span><span class="blank"></span></div></div>
-      <div class="mi"><div class="mi-top"><div class="mn">Batata Cheddar e Bacon</div><div class="mw">Meia porção 200g</div></div><div class="pline"><span class="dots"></span><span class="blank"></span></div></div>
-
-      <div class="mi" style="align-items:flex-start;margin-bottom:2mm">
-        <div class="mi-top">
-          <div class="mn">Bolinho Abóbora c/ Costela</div>
-          <div class="md">Costela desfiada, massa de abóbora cabotiá assada com azeite · 6 un</div>
+      <div id="porcoes-list">
+        <div class="mi" data-section="porcoes" data-idx="0"><div class="mi-top"><div class="mn">Batata Frita</div><div class="mw">Porção 400g</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+        <div class="mi" data-section="porcoes" data-idx="1"><div class="mi-top"><div class="mn">Batata Frita</div><div class="mw">Meia porção 200g</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+        <div class="mi" data-section="porcoes" data-idx="2"><div class="mi-top"><div class="mn">Batata Cheddar e Bacon</div><div class="mw">Porção 400g</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+        <div class="mi" data-section="porcoes" data-idx="3"><div class="mi-top"><div class="mn">Batata Cheddar e Bacon</div><div class="mw">Meia porção 200g</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+        <div class="mi" style="align-items:flex-start;margin-bottom:2mm" data-section="porcoes" data-idx="4">
+          <div class="mi-top"><div class="mn">Bolinho Abóbora c/ Costela</div><div class="md">Costela desfiada, massa de abóbora cabotiá assada com azeite · 6 un</div></div>
+          <span class="price-display" style="margin-top:2px"></span>
         </div>
-        <span class="blank" style="margin-top:2px"></span>
-      </div>
-
-      <div class="mi" style="align-items:flex-start;margin-bottom:2mm">
-        <div class="mi-top">
-          <div class="mn">Calabresa Acebolada 200g</div>
-          <div class="md">Acompanha farofa e pão fatiado</div>
+        <div class="mi" style="align-items:flex-start;margin-bottom:2mm" data-section="porcoes" data-idx="5">
+          <div class="mi-top"><div class="mn">Calabresa Acebolada 200g</div><div class="md">Acompanha farofa e pão fatiado</div></div>
+          <span class="price-display" style="margin-top:2px"></span>
         </div>
-        <span class="blank" style="margin-top:2px"></span>
-      </div>
-
-      <div class="mi" style="align-items:flex-start;margin-bottom:2mm">
-        <div class="mi-top">
-          <div class="mn">Croquete de Bacalhau</div>
-          <div class="md">Acompanha pimenta caseira · 6 un</div>
+        <div class="mi" style="align-items:flex-start;margin-bottom:2mm" data-section="porcoes" data-idx="6">
+          <div class="mi-top"><div class="mn">Croquete de Bacalhau</div><div class="md">Acompanha pimenta caseira · 6 un</div></div>
+          <span class="price-display" style="margin-top:2px"></span>
         </div>
-        <span class="blank" style="margin-top:2px"></span>
-      </div>
-
-      <div class="mi" style="align-items:flex-start;margin-bottom:2mm">
-        <div class="mi-top">
-          <div class="mn">Mini Coxinha Frango</div>
-          <div class="md">Servida com molho barbecue · 10 un</div>
+        <div class="mi" style="align-items:flex-start;margin-bottom:2mm" data-section="porcoes" data-idx="7">
+          <div class="mi-top"><div class="mn">Mini Coxinha Frango</div><div class="md">Servida com molho barbecue · 10 un</div></div>
+          <span class="price-display" style="margin-top:2px"></span>
         </div>
-        <span class="blank" style="margin-top:2px"></span>
-      </div>
-
-      <div class="mi" style="align-items:flex-start">
-        <div class="mi-top">
-          <div class="mn">Torresmo Municipal</div>
-          <div class="md">Marinado na cachaça, assado com ervas, mel e laranja. Pimenta da casa · 250g</div>
+        <div class="mi" style="align-items:flex-start" data-section="porcoes" data-idx="8">
+          <div class="mi-top"><div class="mn">Torresmo Municipal</div><div class="md">Marinado na cachaça, assado com ervas, mel e laranja. Pimenta da casa · 250g</div></div>
+          <span class="price-display" style="margin-top:2px"></span>
         </div>
-        <span class="blank" style="margin-top:2px"></span>
       </div>
     </div>
   </div>
@@ -443,14 +575,10 @@ body.t-kraft .logo-wrap img{
   <div class="taxa">
     <div class="taxa-inner">
       <span class="taxa-star">✦</span>
-      <div class="taxa-text">
-        Taxa de Serviço 10%
-        <em>Opcional — a critério do cliente</em>
-      </div>
+      <div class="taxa-text">Taxa de Serviço 10%<em>Opcional — a critério do cliente</em></div>
       <span class="taxa-star">✦</span>
     </div>
   </div>
-
 </div>
 </div>
 
@@ -468,70 +596,72 @@ body.t-kraft .logo-wrap img{
   </div>
 
   <div class="drinks-grid">
-
-    <!-- LEFT: CERVEJAS + DOSES -->
     <div class="drinks-col">
       <div class="dcol-box">
         <div class="stitle" style="margin:0 0 3mm"><h2 style="font-size:9pt">Cervejas</h2></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Brahma 600ml</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Budweiser 600ml</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Eisenbahn 600ml</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Estrela Galicia 600ml</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Heineken 600ml</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Original 600ml</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Therezópolis 600ml</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Estrela Galicia 330ml</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Heineken 330ml</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm" style="margin-bottom:0"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Heineken S/Álcool 330ml</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
+        <div id="cervejas-list">
+          <div class="mi sm" data-section="cervejas" data-idx="0"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Brahma 600ml</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="cervejas" data-idx="1"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Budweiser 600ml</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="cervejas" data-idx="2"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Eisenbahn 600ml</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="cervejas" data-idx="3"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Estrela Galicia 600ml</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="cervejas" data-idx="4"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Heineken 600ml</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="cervejas" data-idx="5"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Original 600ml</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="cervejas" data-idx="6"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Therezópolis 600ml</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="cervejas" data-idx="7"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Estrela Galicia 330ml</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="cervejas" data-idx="8"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Heineken 330ml</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" style="margin-bottom:0" data-section="cervejas" data-idx="9"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Heineken S/Álcool 330ml</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+        </div>
       </div>
-
       <div class="dcol-box">
         <div class="stitle" style="margin:0 0 3mm"><h2 style="font-size:9pt">Doses</h2></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Cachaça</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Campari</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Conhaque</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Gin Doble W</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Jack Daniels</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Rum</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Vodka</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Whisky 8 Anos</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm" style="margin-bottom:0"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Whisky 12 Anos</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
+        <div id="doses-list">
+          <div class="mi sm" data-section="doses" data-idx="0"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Cachaça</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="doses" data-idx="1"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Campari</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="doses" data-idx="2"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Conhaque</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="doses" data-idx="3"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Gin Doble W</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="doses" data-idx="4"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Jack Daniels</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="doses" data-idx="5"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Rum</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="doses" data-idx="6"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Vodka</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="doses" data-idx="7"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Whisky 8 Anos</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" style="margin-bottom:0" data-section="doses" data-idx="8"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Whisky 12 Anos</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+        </div>
       </div>
     </div>
 
-    <!-- RIGHT: BEBIDAS + DRINKS -->
     <div class="drinks-col">
       <div class="dcol-box">
         <div class="stitle" style="margin:0 0 3mm"><h2 style="font-size:9pt">Bebidas</h2></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Água sem gás</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Água com gás</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Energético Monster</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Energético Red Bull</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Refrigerante Lata</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Refrigerante KS</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Maté Batido (sabores)</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Suco de Laranja Integral</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Suco de Uva Integral</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Suco Del Valle Sabores</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Soda Italiana</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm" style="margin-bottom:0"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Sprite Lemon</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
+        <div id="bebidas-list">
+          <div class="mi sm" data-section="bebidas" data-idx="0"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Água sem gás</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="bebidas" data-idx="1"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Água com gás</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="bebidas" data-idx="2"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Energético Monster</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="bebidas" data-idx="3"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Energético Red Bull</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="bebidas" data-idx="4"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Refrigerante Lata</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="bebidas" data-idx="5"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Refrigerante KS</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="bebidas" data-idx="6"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Maté Batido (sabores)</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="bebidas" data-idx="7"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Suco de Laranja Integral</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="bebidas" data-idx="8"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Suco de Uva Integral</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="bebidas" data-idx="9"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Suco Del Valle Sabores</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="bebidas" data-idx="10"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Soda Italiana</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" style="margin-bottom:0" data-section="bebidas" data-idx="11"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Sprite Lemon</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+        </div>
       </div>
-
       <div class="dcol-box">
         <div class="stitle" style="margin:0 0 2mm"><h2 style="font-size:9pt">Drinks</h2></div>
         <div class="caip">Caipiras:</div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Cachaça</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Vodka</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Rum</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Saquê</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="dline" style="margin:2mm 0"></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Gin Tônica</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Cuba Libre</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Jack and Coke</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
-        <div class="mi sm" style="margin-bottom:0"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Negroni</div></div><div class="pline"><span class="dots"></span><span class="blank" style="width:12mm"></span></div></div>
+        <div id="drinks-list">
+          <div class="mi sm" data-section="drinks" data-idx="0"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Cachaça</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="drinks" data-idx="1"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Vodka</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="drinks" data-idx="2"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Rum</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="drinks" data-idx="3"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Saquê</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="dline" style="margin:2mm 0"></div>
+          <div class="mi sm" data-section="drinks" data-idx="4"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Gin Tônica</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="drinks" data-idx="5"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Cuba Libre</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="drinks" data-idx="6"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Jack and Coke</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" style="margin-bottom:0" data-section="drinks" data-idx="7"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Negroni</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+        </div>
       </div>
     </div>
-
   </div>
 
   <div class="chopp">
@@ -542,29 +672,323 @@ body.t-kraft .logo-wrap img{
   <div class="taxa">
     <div class="taxa-inner">
       <span class="taxa-star">✦</span>
-      <div class="taxa-text">
-        Taxa de Serviço 10%
-        <em>Opcional — a critério do cliente</em>
-      </div>
+      <div class="taxa-text">Taxa de Serviço 10%<em>Opcional — a critério do cliente</em></div>
       <span class="taxa-star">✦</span>
     </div>
   </div>
-
 </div>
 </div>
 
 </div><!-- /pages -->
 
 <script>
+// ============ DATA STORE ============
+// Each section maps to array of {name, sub, desc, price}
+const sections = {
+  almoco: [], parmegiana: [], feijoada: [],
+  sanduiche: [], porcoes: [],
+  cervejas: [], doses: [], bebidas: [], drinks: []
+};
+
+// Initialize from DOM
+function initFromDOM() {
+  // almoco
+  const almocoItems = [
+    {name:'Alcatra',sub:'+/– 150g',desc:'',price:''},
+    {name:'Bife de Ancho',sub:'+/– 200g',desc:'',price:''},
+    {name:'Bisteca Suína',sub:'+/– 160g',desc:'',price:''},
+    {name:'Bife de Alcatra',sub:'+/– 100g',desc:'',price:''},
+    {name:'Contra Filé',sub:'+/– 200g',desc:'',price:''},
+    {name:'Peito de Frango',sub:'+/– 120g',desc:'',price:''},
+    {name:'Picanha',sub:'+/– 200g',desc:'',price:''},
+    {name:'Sobrecoxa em Cubos',sub:'+/– 200g',desc:'',price:''},
+    {name:'Vegetariano',sub:'2 ovos',desc:'',price:''},
+  ];
+  sections.almoco = almocoItems;
+
+  sections.parmegiana = [
+    {name:'Mignon Individual',sub:'',desc:'',price:''},
+    {name:'Mignon Duas pessoas',sub:'',desc:'',price:''},
+    {name:'Mignon Três pessoas',sub:'',desc:'',price:''},
+    {name:'Frango Individual',sub:'',desc:'',price:''},
+    {name:'Frango Duas pessoas',sub:'',desc:'',price:''},
+    {name:'Frango Três pessoas',sub:'',desc:'',price:''},
+  ];
+
+  sections.feijoada = [
+    {name:'Individual',sub:'',desc:'',price:''},
+    {name:'Duas pessoas',sub:'',desc:'',price:''},
+  ];
+
+  sections.sanduiche = [
+    {name:'Pão com Bolinho',sub:'',desc:'Blend de carnes, temperos, ervas e especiarias. Maionese com alho e bacon, creme de queijo cheddar e cebolinha. Pão francês, acompanha batata frita',price:''},
+    {name:'Pork',sub:'',desc:'Lombo de porco, mel, barbecue, especiarias, rúcula e queijo mussarela',price:''},
+    {name:'Pão com Bifé de Alcatra',sub:'',desc:'Bife e maionese · +R$3 queijo · +R$3 ovo',price:''},
+    {name:'Pão com Linguiça',sub:'',desc:'Calabresa na chapa com cebola e ervas frescas · +R$3 queijo · +R$3 ovo',price:''},
+    {name:'Sanduíche de Panceta',sub:'',desc:'Panceta marinada na cachaça e chopp, especiarias, salsinha, cebolinha e coentro, molho mostarda e mel. Pão francês',price:''},
+  ];
+
+  sections.porcoes = [
+    {name:'Batata Frita',sub:'Porção 400g',desc:'',price:''},
+    {name:'Batata Frita',sub:'Meia porção 200g',desc:'',price:''},
+    {name:'Batata Cheddar e Bacon',sub:'Porção 400g',desc:'',price:''},
+    {name:'Batata Cheddar e Bacon',sub:'Meia porção 200g',desc:'',price:''},
+    {name:'Bolinho Abóbora c/ Costela',sub:'',desc:'Costela desfiada, massa de abóbora cabotiá assada com azeite · 6 un',price:''},
+    {name:'Calabresa Acebolada 200g',sub:'',desc:'Acompanha farofa e pão fatiado',price:''},
+    {name:'Croquete de Bacalhau',sub:'',desc:'Acompanha pimenta caseira · 6 un',price:''},
+    {name:'Mini Coxinha Frango',sub:'',desc:'Servida com molho barbecue · 10 un',price:''},
+    {name:'Torresmo Municipal',sub:'',desc:'Marinado na cachaça, assado com ervas, mel e laranja. Pimenta da casa · 250g',price:''},
+  ];
+
+  sections.cervejas = [
+    'Brahma 600ml','Budweiser 600ml','Eisenbahn 600ml','Estrela Galicia 600ml',
+    'Heineken 600ml','Original 600ml','Therezópolis 600ml',
+    'Estrela Galicia 330ml','Heineken 330ml','Heineken S/Álcool 330ml'
+  ].map(n=>({name:n,sub:'',desc:'',price:''}));
+
+  sections.doses = [
+    'Cachaça','Campari','Conhaque','Gin Doble W','Jack Daniels','Rum','Vodka','Whisky 8 Anos','Whisky 12 Anos'
+  ].map(n=>({name:n,sub:'',desc:'',price:''}));
+
+  sections.bebidas = [
+    'Água sem gás','Água com gás','Energético Monster','Energético Red Bull',
+    'Refrigerante Lata','Refrigerante KS','Maté Batido (sabores)',
+    'Suco de Laranja Integral','Suco de Uva Integral','Suco Del Valle Sabores','Soda Italiana','Sprite Lemon'
+  ].map(n=>({name:n,sub:'',desc:'',price:''}));
+
+  sections.drinks = [
+    'Cachaça','Vodka','Rum','Saquê','Gin Tônica','Cuba Libre','Jack and Coke','Negroni'
+  ].map(n=>({name:n,sub:'',desc:'',price:''}));
+}
+
+// ============ THEME ============
 function setTheme(t, btn) {
-  document.body.className = 't-' + t;
-  document.querySelectorAll('.tbtn').forEach(b => b.classList.remove('on'));
+  document.body.className = document.body.className.replace(/t-\w+/,'') + ' t-' + t;
+  document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
-  // Update all stitle h2 backgrounds to match new page bg
-  document.querySelectorAll('.stitle h2').forEach(el => {
-    el.style.background = 'var(--bg)';
+  document.querySelectorAll('.stitle h2').forEach(el=>{el.style.background='var(--bg)'});
+}
+
+// ============ PANEL ============
+let panelOpen = false;
+let currentTab = 0;
+const tabSections = ['almoco','sanduiche','porcoes','cervejas','doses','bebidas','drinks'];
+
+function toggleEditPanel() {
+  panelOpen = !panelOpen;
+  document.getElementById('edit-panel').classList.toggle('open', panelOpen);
+  document.getElementById('pages').classList.toggle('panel-open', panelOpen);
+  document.getElementById('toggleEdit').classList.toggle('active', panelOpen);
+  if(panelOpen) renderTab(currentTab);
+}
+
+function switchTab(idx, btn) {
+  currentTab = idx;
+  document.querySelectorAll('.ep-tab').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  renderTab(idx);
+}
+
+// ============ RENDER EDITOR TAB ============
+function renderTab(idx) {
+  const sec = tabSections[idx];
+  const data = sections[sec];
+  const body = document.getElementById('ep-body');
+
+  const hasSub = sec === 'almoco' || sec === 'porcoes';
+  const hasDesc = sec === 'sanduiche' || sec === 'porcoes';
+
+  let html = `<div class="ep-section">
+    <div class="ep-section-title">${secLabel(sec)}</div>`;
+
+  data.forEach((item, i) => {
+    html += `<div class="ep-item" id="ep-item-${sec}-${i}">
+      <div class="ep-row">
+        <div class="ep-field">
+          <div class="ep-label">Nome</div>
+          <input class="ep-input" id="ei-name-${sec}-${i}" value="${escHtml(item.name)}" placeholder="Nome do item">
+        </div>
+        <div class="ep-field" style="max-width:90px">
+          <div class="ep-label">Preço</div>
+          <input class="ep-input price-field" id="ei-price-${sec}-${i}" value="${escHtml(item.price)}" placeholder="R$ 0,00">
+        </div>
+        <button class="ep-del" onclick="deleteItem('${sec}',${i})" title="Remover">✕</button>
+      </div>`;
+
+    if(hasSub) {
+      html += `<div class="ep-row">
+        <div class="ep-field">
+          <div class="ep-label">Subtítulo (gramagem etc)</div>
+          <input class="ep-input" id="ei-sub-${sec}-${i}" value="${escHtml(item.sub)}" placeholder="Ex: +/– 200g">
+        </div>
+      </div>`;
+    }
+
+    if(hasDesc || item.desc) {
+      html += `<div class="ep-row">
+        <div class="ep-field">
+          <div class="ep-label">Descrição</div>
+          <input class="ep-input" id="ei-desc-${sec}-${i}" value="${escHtml(item.desc)}" placeholder="Ingredientes, observações...">
+        </div>
+      </div>`;
+    }
+
+    html += `</div>`;
+  });
+
+  html += `<button class="ep-add-btn" onclick="addItem('${sec}')">+ Adicionar item em ${secLabel(sec)}</button>`;
+  html += `</div>`;
+
+  body.innerHTML = html;
+}
+
+function secLabel(sec) {
+  const labels = {almoco:'Almoço',sanduiche:'Sanduíches',porcoes:'Porções',cervejas:'Cervejas',doses:'Doses',bebidas:'Bebidas',drinks:'Drinks'};
+  return labels[sec] || sec;
+}
+
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ============ ADD / DELETE ============
+function addItem(sec) {
+  sections[sec].push({name:'Novo Item',sub:'',desc:'',price:''});
+  renderTab(currentTab);
+  // Scroll to last item
+  setTimeout(()=>{
+    const body = document.getElementById('ep-body');
+    body.scrollTop = body.scrollHeight;
+  },50);
+}
+
+function deleteItem(sec, idx) {
+  if(sections[sec].length <= 1) return;
+  sections[sec].splice(idx,1);
+  renderTab(currentTab);
+}
+
+// ============ APPLY ============
+function applyAll() {
+  // Collect from all tabs by reading inputs that exist
+  tabSections.forEach(sec => {
+    sections[sec].forEach((item, i) => {
+      const nameEl = document.getElementById(`ei-name-${sec}-${i}`);
+      const priceEl = document.getElementById(`ei-price-${sec}-${i}`);
+      const subEl = document.getElementById(`ei-sub-${sec}-${i}`);
+      const descEl = document.getElementById(`ei-desc-${sec}-${i}`);
+      if(nameEl) item.name = nameEl.value;
+      if(priceEl) item.price = priceEl.value;
+      if(subEl) item.sub = subEl.value;
+      if(descEl) item.desc = descEl.value;
+    });
+  });
+
+  applyToMenu();
+  showNotify();
+}
+
+function applyToMenu() {
+  // ALMOÇO
+  rebuildList('almoco-list', sections.almoco, 'almoco', (item,i) => `
+    <div class="mi" data-section="almoco" data-idx="${i}">
+      <div class="mi-top">
+        <div class="mn">${item.name}</div>
+        ${item.sub ? `<div class="mw">${item.sub}</div>` : ''}
+      </div>
+      <div class="pline"><span class="dots"></span><span class="price-display">${fmtPrice(item.price)}</span></div>
+    </div>`);
+
+  // PARMEGIANA & FEIJOADA (fixed structure, just update prices)
+  updateSiItems('parmegiana', sections.parmegiana);
+  updateSiItems('feijoada', sections.feijoada);
+
+  // SANDUÍCHES
+  rebuildList('sanduiche-list', sections.sanduiche, 'sanduiche', (item,i) => `
+    <div class="mi" style="align-items:flex-start;margin-bottom:3mm" data-section="sanduiche" data-idx="${i}">
+      <div class="mi-top">
+        <div class="mn">${item.name}</div>
+        ${item.desc ? `<div class="md">${item.desc}</div>` : ''}
+      </div>
+      <span class="price-display" style="margin-top:2px">${fmtPrice(item.price)}</span>
+    </div>`);
+
+  // PORÇÕES
+  rebuildList('porcoes-list', sections.porcoes, 'porcoes', (item,i) => {
+    const hasDesc = item.desc && !item.sub;
+    if(hasDesc) return `
+      <div class="mi" style="align-items:flex-start;margin-bottom:2mm" data-section="porcoes" data-idx="${i}">
+        <div class="mi-top"><div class="mn">${item.name}</div><div class="md">${item.desc}</div></div>
+        <span class="price-display" style="margin-top:2px">${fmtPrice(item.price)}</span>
+      </div>`;
+    return `
+      <div class="mi" data-section="porcoes" data-idx="${i}">
+        <div class="mi-top">
+          <div class="mn">${item.name}</div>
+          ${item.sub ? `<div class="mw">${item.sub}</div>` : ''}
+          ${item.desc ? `<div class="md">${item.desc}</div>` : ''}
+        </div>
+        <div class="pline"><span class="dots"></span><span class="price-display">${fmtPrice(item.price)}</span></div>
+      </div>`;
+  });
+
+  // CERVEJAS
+  rebuildListSm('cervejas-list', sections.cervejas, 'cervejas');
+  // DOSES
+  rebuildListSm('doses-list', sections.doses, 'doses');
+  // BEBIDAS
+  rebuildListSm('bebidas-list', sections.bebidas, 'bebidas');
+  // DRINKS
+  rebuildListSm('drinks-list', sections.drinks, 'drinks');
+}
+
+function rebuildList(listId, items, sec, tplFn) {
+  const el = document.getElementById(listId);
+  if(!el) return;
+  el.innerHTML = items.map((item,i) => tplFn(item,i)).join('');
+}
+
+function rebuildListSm(listId, items, sec) {
+  const el = document.getElementById(listId);
+  if(!el) return;
+  el.innerHTML = items.map((item,i) => `
+    <div class="mi sm" data-section="${sec}" data-idx="${i}">
+      <div class="mi-top"><div class="mn" style="font-size:7.5pt">${item.name}</div></div>
+      <div class="pline"><span class="dots"></span><span class="price-display">${fmtPrice(item.price)}</span></div>
+    </div>`).join('');
+}
+
+function updateSiItems(sec, items) {
+  document.querySelectorAll(`[data-section="${sec}"]`).forEach(el => {
+    const idx = parseInt(el.dataset.idx);
+    if(items[idx]) {
+      const pd = el.querySelector('.price-display');
+      if(pd) pd.textContent = fmtPrice(items[idx].price);
+      const sn = el.querySelector('.sn');
+      if(sn) sn.textContent = items[idx].name;
+    }
   });
 }
+
+function fmtPrice(p) {
+  if(!p || p.trim() === '') return '';
+  // If already has R$, return as is
+  if(p.includes('R$') || p.includes('$')) return p.trim();
+  // Try to parse as number
+  const n = parseFloat(p.replace(',','.'));
+  if(!isNaN(n)) return 'R$ ' + n.toFixed(2).replace('.',',');
+  return p.trim();
+}
+
+// ============ NOTIFY ============
+function showNotify() {
+  const n = document.getElementById('notify');
+  n.classList.add('show');
+  setTimeout(()=>n.classList.remove('show'), 2500);
+}
+
+// ============ INIT ============
+initFromDOM();
 </script>
 </body>
 </html>
