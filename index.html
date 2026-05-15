@@ -413,15 +413,13 @@ body.t-kraft .logo-wrap img { mix-blend-mode:normal; filter:none; }
 
 /* PRINT */
 @media print{
-  #ui-bar{display:none}
-  #edit-panel{display:none}
-  body{background:white}
-  .pages{margin-top:0;padding:0;margin-right:0!important}
-  .page{margin:0;box-shadow:none;page-break-after:always;width:210mm;min-height:297mm}
-  .page:last-child{page-break-after:avoid}
+  *{ -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+  #ui-bar,#edit-panel,#notify{ display:none !important; }
+  html,body{ margin:0 !important; padding:0 !important; background:transparent !important; }
+  .pages{ margin:0 !important; padding:0 !important; }
+  .page{ margin:0 !important; box-shadow:none !important; page-break-after:always; width:210mm !important; min-height:297mm !important; }
+  .page:last-child{ page-break-after:avoid; }
 }
-</style>
-<style id="dynamic-styles"></style>
 
 /* NOTIFICATION */
 #notify{
@@ -433,6 +431,7 @@ body.t-kraft .logo-wrap img { mix-blend-mode:normal; filter:none; }
 }
 #notify.show{transform:translateX(-50%) translateY(0)}
 </style>
+<style id="dynamic-styles"></style>
 </head>
 <body class="t-vintage">
 
