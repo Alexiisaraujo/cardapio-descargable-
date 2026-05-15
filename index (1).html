@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cardápio – Boteco Municipal</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IM+Fell+English:ital@0;1&family=Cinzel+Decorative:wght@400;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+/* FONT PAIRS */
+body{
+  --f-display:'Playfair Display',serif;
+  --f-body:'Libre Baskerville',serif;
+  --f-accent:'IM Fell English',serif;
+}
+body.f-cormorant{
+  --f-display:'Cormorant Garamond',serif;
+  --f-body:'Cormorant Garamond',serif;
+  --f-accent:'Cormorant Garamond',serif;
+}
+body.f-garamond{
+  --f-display:'EB Garamond',serif;
+  --f-body:'EB Garamond',serif;
+  --f-accent:'EB Garamond',serif;
+}
+body.f-lora{
+  --f-display:'Lora',serif;
+  --f-body:'Lora',serif;
+  --f-accent:'Lora',serif;
+}
+
+/* THEMES */
+body.t-vintage{
+  --bg:#f4ede0;--ink:#2c1a06;--gold:#b8922a;--gold2:#d4a843;
+  --brown:#3d2008;--line:#b8922a;--body-bg:#6b5030;
+  --taxa-bg:#3d2008;--taxa-fg:#f4ede0;--taxa-border:#b8922a;
+--logo-blend:multiply;
+}
+body.t-dark{
+  --bg:#141210;--ink:#e8dcc8;--gold:#d4a843;--gold2:#e8c470;
+  --brown:#e0c080;--line:#d4a843;--body-bg:#0a0906;
+  --taxa-bg:#0d0b08;--taxa-fg:#d4a843;--taxa-border:#d4a843;
+--logo-blend:normal;
+}
+body.t-classic{
+  --bg:#ffffff;--ink:#111111;--gold:#111111;--gold2:#444444;
+  --brown:#111111;--line:#333333;--body-bg:#aaaaaa;
+  --taxa-bg:#111111;--taxa-fg:#ffffff;--taxa-border:#111111;
+--logo-blend:multiply;
+}
+body.t-kraft{
+  --bg:#c4a06a;--ink:#2a1500;--gold:#6b3510;--gold2:#8b5530;
+  --brown:#3d1e05;--line:#6b3510;--body-bg:#8a6030;
+  --taxa-bg:#3d1e05;--taxa-fg:#c4a06a;--taxa-border:#6b3510;
+--logo-blend:normal;
+}
+body.t-rubi{
+  --bg:#f9f2f0;--ink:#1a0508;--gold:#8b1a1a;--gold2:#b83232;
+  --brown:#6b0f0f;--line:#8b1a1a;--body-bg:#4a0808;
+  --taxa-bg:#1a0508;--taxa-fg:#f9f2f0;--taxa-border:#8b1a1a;
+--logo-blend:multiply;
+}
+body.t-floresta{
+  --bg:#0e1a10;--ink:#cce8c8;--gold:#76b842;--gold2:#9dd464;
+  --brown:#b4d888;--line:#76b842;--body-bg:#060d07;
+  --taxa-bg:#060d07;--taxa-fg:#76b842;--taxa-border:#76b842;
+--logo-blend:normal;
+}
+body.t-noite{
+  --bg:#0b0e1c;--ink:#d0d8f4;--gold:#8c9de0;--gold2:#aab4f0;
+  --brown:#b4bce8;--line:#8c9de0;--body-bg:#060810;
+  --taxa-bg:#060810;--taxa-fg:#8c9de0;--taxa-border:#8c9de0;
+--logo-blend:normal;
+}
+body.t-marfim{
+  --bg:#faf8f0;--ink:#1a1528;--gold:#2c3e6b;--gold2:#4a5c8f;
+  --brown:#1a2545;--line:#2c3e6b;--body-bg:#70788c;
+  --taxa-bg:#1a2545;--taxa-fg:#faf8f0;--taxa-border:#2c3e6b;
+--logo-blend:multiply;
+}
+
+body{
+  background:var(--body-bg);
+  font-family:var(--f-body);
+  color:var(--ink);
+  transition:background .3s;
+}
+
+/* ============ UI BAR ============ */
+#ui-bar{
+  position:fixed;top:0;left:0;right:0;z-index:9999;
+  background:rgba(10,8,5,0.97);
+  backdrop-filter:blur(10px);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 16px;gap:10px;
+  border-bottom:1px solid rgba(212,168,67,0.3);
+  flex-wrap:wrap;
+}
+.ui-group{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.ui-label{
+  font-family:'Cinzel Decorative',serif;
+  font-size:9px;color:rgba(212,168,67,0.6);
+  letter-spacing:2px;white-space:nowrap;
+}
+.theme-btns,.font-btns{display:flex;gap:4px;flex-wrap:wrap}
+.tbtn,.fbtn{
+  padding:4px 9px;
+  border:1.5px solid rgba(212,168,67,0.3);
+  background:transparent;color:#d4a843;
+  font-family:'Libre Baskerville',serif;
+  font-size:9px;letter-spacing:.5px;
+  cursor:pointer;border-radius:2px;
+  transition:all .2s;text-transform:uppercase;
+}
+.tbtn:hover,.fbtn:hover{background:rgba(212,168,67,0.1);border-color:#d4a843}
+.tbtn.on,.fbtn.on{background:#d4a843;color:#1a1208;border-color:#d4a843;font-weight:700}
+.ui-sep{width:1px;height:20px;background:rgba(212,168,67,0.2);flex-shrink:0}
+.edit-btn{
+  padding:6px 14px;background:transparent;color:#d4a843;
+  border:1.5px solid #d4a843;font-family:'Cinzel Decorative',serif;
+  font-size:9px;letter-spacing:1px;cursor:pointer;
+  border-radius:2px;white-space:nowrap;transition:all .2s;
+}
+.edit-btn:hover{background:rgba(212,168,67,0.15)}
+.edit-btn.active{background:#d4a843;color:#1a1208;}
+.dl-btn{
+  padding:6px 14px;background:#d4a843;color:#1a1208;
+  border:none;font-family:'Cinzel Decorative',serif;
+  font-size:9px;letter-spacing:1px;cursor:pointer;
+  border-radius:2px;white-space:nowrap;transition:opacity .2s;
+}
+.dl-btn:hover{opacity:.85}
+
+/* ============ EDIT PANEL ============ */
+#edit-panel{
+  position:fixed;top:0;right:0;bottom:0;width:420px;z-index:9998;
+  background:#0e0c09;border-left:1px solid rgba(212,168,67,0.3);
+  display:flex;flex-direction:column;
+  transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);
+  overflow:hidden;
+}
+#edit-panel.open{transform:translateX(0)}
+.ep-header{
+  background:#1a1409;padding:18px 20px 14px;
+  border-bottom:1px solid rgba(212,168,67,0.25);
+  flex-shrink:0;
+}
+.ep-title{
+  font-family:'Cinzel Decorative',serif;font-size:12px;
+  color:#d4a843;letter-spacing:3px;text-transform:uppercase;
+}
+.ep-sub{
+  font-family:'Libre Baskerville',serif;font-size:10px;
+  color:rgba(212,168,67,0.5);margin-top:3px;letter-spacing:.5px;
+}
+.ep-tabs{
+  display:flex;background:#0a0806;
+  border-bottom:1px solid rgba(212,168,67,0.2);
+  flex-shrink:0;overflow-x:auto;
+}
+.ep-tab{
+  padding:10px 14px;font-family:'Libre Baskerville',serif;
+  font-size:10px;color:rgba(212,168,67,0.5);letter-spacing:.5px;
+  cursor:pointer;border-bottom:2px solid transparent;
+  transition:all .2s;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;
+  text-transform:uppercase;
+}
+.ep-tab:hover{color:#d4a843}
+.ep-tab.on{color:#d4a843;border-bottom-color:#d4a843;background:rgba(212,168,67,0.05)}
+.ep-body{
+  flex:1;overflow-y:auto;padding:16px;
+}
+.ep-body::-webkit-scrollbar{width:4px}
+.ep-body::-webkit-scrollbar-track{background:#0a0806}
+.ep-body::-webkit-scrollbar-thumb{background:#d4a843;border-radius:2px}
+
+/* SECTION BLOCK */
+.ep-section{margin-bottom:20px}
+.ep-section-title{
+  font-family:'Cinzel Decorative',serif;font-size:9px;
+  color:#d4a843;letter-spacing:2px;text-transform:uppercase;
+  padding-bottom:8px;border-bottom:1px solid rgba(212,168,67,0.2);
+  margin-bottom:10px;
+}
+
+/* ITEM ROW */
+.ep-item{
+  background:#1a1409;border:1px solid rgba(212,168,67,0.15);
+  border-radius:3px;padding:10px 12px;margin-bottom:8px;
+  position:relative;
+}
+.ep-item:hover{border-color:rgba(212,168,67,0.35)}
+.ep-row{display:flex;gap:8px;margin-bottom:6px;align-items:center}
+.ep-row:last-child{margin-bottom:0}
+.ep-field{
+  flex:1;display:flex;flex-direction:column;gap:3px;
+}
+.ep-label{
+  font-family:'Libre Baskerville',serif;font-size:9px;
+  color:rgba(212,168,67,0.5);text-transform:uppercase;letter-spacing:.5px;
+}
+.ep-input{
+  background:#0a0806;border:1px solid rgba(212,168,67,0.2);
+  color:#e8dcc8;font-family:'Libre Baskerville',serif;font-size:11px;
+  padding:6px 8px;border-radius:2px;width:100%;
+  transition:border-color .2s;
+}
+.ep-input:focus{outline:none;border-color:#d4a843}
+.ep-input.price{
+  width:90px;flex:none;text-align:right;
+  font-family:'Playfair Display',serif;font-weight:700;
+}
+.ep-del{
+  background:rgba(180,50,50,0.2);border:1px solid rgba(180,50,50,0.4);
+  color:#e07070;font-size:12px;width:26px;height:26px;
+  cursor:pointer;border-radius:2px;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;transition:all .2s;
+}
+.ep-del:hover{background:rgba(180,50,50,0.4);color:#fff}
+
+/* ADD BUTTONS */
+.ep-add-btn{
+  width:100%;padding:8px;background:transparent;
+  border:1px dashed rgba(212,168,67,0.3);color:rgba(212,168,67,0.6);
+  font-family:'Libre Baskerville',serif;font-size:10px;
+  letter-spacing:1px;cursor:pointer;border-radius:2px;
+  transition:all .2s;text-transform:uppercase;margin-top:4px;
+}
+.ep-add-btn:hover{border-color:#d4a843;color:#d4a843;background:rgba(212,168,67,0.05)}
+
+/* APPLY BTN */
+.ep-apply{
+  padding:12px 20px;background:rgba(212,168,67,0.08);
+  border-top:1px solid rgba(212,168,67,0.2);
+  flex-shrink:0;
+}
+.ep-apply-btn{
+  width:100%;padding:10px;background:#d4a843;color:#1a1208;
+  border:none;font-family:'Cinzel Decorative',serif;font-size:11px;
+  letter-spacing:2px;cursor:pointer;border-radius:2px;
+  transition:opacity .2s;text-transform:uppercase;
+}
+.ep-apply-btn:hover{opacity:.85}
+
+/* EDIT MODE OVERLAY on page items */
+body.editing .mi,
+body.editing .si{cursor:default;position:relative}
+
+/* ============ PAGE ============ */
+.pages{margin-top:80px;padding:16px 0 32px;transition:margin-right .35s}
+body.panel-open .pages{margin-right:420px}
+.page{
+  width:210mm;min-height:297mm;
+  background:var(--bg);
+  margin:12px auto;padding:12mm 14mm;
+  position:relative;overflow:hidden;
+  box-shadow:0 6px 40px rgba(0,0,0,0.5);
+  display:flex;flex-direction:column;
+  transition:background .3s;
+}
+
+/* BORDER FRAME */
+.frame{
+  border:2px solid var(--gold);
+  padding:8mm 10mm;
+  position:relative;
+  flex:1;display:flex;flex-direction:column;
+}
+.frame::after{
+  content:'';position:absolute;inset:4px;
+  border:1px solid var(--gold);opacity:.25;pointer-events:none;
+}
+
+/* CORNER SVG */
+.crn{position:absolute;width:24px;height:24px;z-index:2}
+.crn svg{width:100%;height:100%}
+.crn.tl{top:-1px;left:-1px}
+.crn.tr{top:-1px;right:-1px;transform:scaleX(-1)}
+.crn.bl{bottom:-1px;left:-1px;transform:scaleY(-1)}
+.crn.br{bottom:-1px;right:-1px;transform:scale(-1)}
+
+/* HEADER */
+.hdr{text-align:center;margin-bottom:5mm;padding-bottom:4mm;border-bottom:1px solid var(--line)}
+/* LOGO — explicit per theme */
+.logo-wrap{
+  width:72px;height:72px;margin:0 auto 2mm;
+  display:flex;align-items:center;justify-content:center;
+}
+.logo-wrap img{
+  width:100%;height:100%;object-fit:contain;
+  display:block;
+}
+/* temas claros: multiply remove halos brancos */
+body.t-vintage .logo-wrap img,
+body.t-classic .logo-wrap img,
+body.t-rubi    .logo-wrap img,
+body.t-marfim  .logo-wrap img { mix-blend-mode:multiply; filter:none; }
+/* temas escuros: inverte preservando detalhes + tinte dourado */
+body.t-dark     .logo-wrap img { mix-blend-mode:normal; filter:invert(1) sepia(0.4) saturate(1.8) hue-rotate(355deg) brightness(1.15); }
+body.t-floresta .logo-wrap img { mix-blend-mode:normal; filter:invert(1) sepia(0.3) saturate(2.5) hue-rotate(60deg) brightness(1.1); }
+body.t-noite    .logo-wrap img { mix-blend-mode:normal; filter:invert(1) sepia(0.2) saturate(1.5) hue-rotate(200deg) brightness(1.1); }
+/* kraft: fundo médio-escuro, mostra natural */
+body.t-kraft .logo-wrap img { mix-blend-mode:normal; filter:none; }
+.tagline{
+  font-family:var(--f-accent);font-style:italic;
+  font-size:7.5pt;color:var(--gold);letter-spacing:2px;
+  text-transform:uppercase;margin-top:1mm;
+}
+
+/* SECTION TITLE */
+.stitle{text-align:center;margin:4mm 0 2mm;position:relative}
+.stitle h2{
+  font-family:'Cinzel Decorative',serif;
+  font-size:10.5pt;font-weight:700;color:var(--brown);
+  letter-spacing:3px;text-transform:uppercase;
+  display:inline-block;padding:0 7mm;
+  background:var(--bg);position:relative;z-index:1;
+  transition:background .3s,color .3s;
+}
+.stitle::before{
+  content:'';position:absolute;top:50%;left:0;right:0;
+  height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent);
+  z-index:0;
+}
+.ssub{
+  text-align:center;font-family:var(--f-accent);
+  font-style:italic;font-size:7pt;color:var(--gold);
+  letter-spacing:1px;text-transform:uppercase;margin-bottom:3mm;
+}
+.choose{
+  text-align:center;font-family:var(--f-display);
+  font-size:7pt;color:var(--brown);letter-spacing:2px;
+  text-transform:uppercase;margin-bottom:3mm;
+}
+
+/* MENU ITEM */
+.mi{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1.8mm;gap:4mm}
+.mi-top{flex:1}
+.mn{font-family:var(--f-display);font-weight:700;font-size:8.5pt;color:var(--ink);text-transform:uppercase;letter-spacing:.5px}
+.mw{font-family:var(--f-accent);font-size:6.5pt;color:var(--gold);font-style:italic}
+.md{font-family:var(--f-body);font-size:6.5pt;color:var(--gold2);font-style:italic;line-height:1.35;margin-top:.5mm}
+.dots{border-bottom:1px dotted var(--line);flex:1;min-width:10mm;opacity:.4;margin-bottom:2px}
+.price-display{
+  font-family:var(--f-display);font-weight:700;font-size:8pt;
+  color:var(--ink);flex-shrink:0;white-space:nowrap;min-width:18mm;
+  text-align:right;
+}
+.blank{width:18mm;border-bottom:1.5px solid var(--ink);flex-shrink:0;opacity:.5}
+.pline{display:flex;align-items:center;gap:2mm;flex-shrink:0}
+
+/* DIVIDER */
+.dline{height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent);margin:3.5mm 0;opacity:.5}
+
+/* TWO COL */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:5mm}
+.ctitle{font-family:var(--f-display);font-size:8pt;font-weight:700;font-style:italic;color:var(--brown);letter-spacing:1px;margin-bottom:2mm}
+.si{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.8mm}
+.sn{font-family:var(--f-body);font-size:7pt;color:var(--ink);text-transform:uppercase;letter-spacing:.5px}
+.si .price-display{min-width:13mm;font-size:7.5pt}
+.si .blank{width:13mm}
+
+/* SPECIAL BOX */
+.sbox{border:1px solid var(--gold);padding:3mm 4mm;margin-top:2mm;background:rgba(184,146,42,.05)}
+.note{text-align:center;font-family:var(--f-accent);font-size:6.5pt;color:var(--gold);font-style:italic;margin-top:2mm}
+
+/* CHEF BADGE */
+.chef{margin-top:3.5mm;text-align:center;}
+.chef span{
+  display:inline-block;background:var(--gold);color:var(--bg);
+  font-family:var(--f-display);font-size:7pt;
+  padding:2.5mm 6mm;letter-spacing:1px;font-style:italic;
+}
+
+/* TAXA FOOTER */
+.taxa{margin-top:auto;padding-top:4mm;}
+.taxa-inner{
+  border:1.5px solid var(--taxa-border);
+  background:var(--taxa-bg);
+  padding:3.5mm 6mm;
+  display:flex;align-items:center;justify-content:center;gap:8mm;
+}
+.taxa-star{font-size:12pt;color:var(--taxa-fg);opacity:.7;flex-shrink:0}
+.taxa-text{
+  font-family:'Cinzel Decorative',serif;
+  font-size:8pt;color:var(--taxa-fg);
+  letter-spacing:2px;text-align:center;line-height:1.5;
+}
+.taxa-text em{
+  display:block;font-family:'IM Fell English',serif;
+  font-size:6.5pt;letter-spacing:1px;opacity:.75;
+  font-style:italic;margin-top:.5mm;
+}
+
+/* PAGE 2 SPLIT */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:5mm;flex:1}
+.split-col{display:flex;flex-direction:column;gap:0}
+
+/* PAGE 3 DRINKS */
+.drinks-grid{display:grid;grid-template-columns:1fr 1fr;gap:5mm;flex:1}
+.drinks-col{display:flex;flex-direction:column;gap:3mm}
+.dcol-box{border:1px solid rgba(184,146,42,.25);padding:3mm}
+.mi.sm .mn{font-size:7.5pt}
+.mi.sm .price-display{font-size:7.5pt;min-width:13mm}
+.mi.sm .blank{width:13mm}
+.caip{font-family:var(--f-body);font-size:6.5pt;font-style:italic;color:var(--gold);margin-bottom:1.5mm}
+
+/* CHOPP */
+.chopp{border:1.5px solid var(--gold);padding:4mm;text-align:center;margin-top:4mm;}
+.chopp-t{font-family:'Cinzel Decorative',serif;font-size:9pt;color:var(--brown);letter-spacing:3px}
+.chopp-d{font-family:var(--f-accent);font-style:italic;font-size:7.5pt;color:var(--gold);margin-top:1mm}
+
+/* PRINT */
+@media print{
+  #ui-bar{display:none}
+  #edit-panel{display:none}
+  body{background:white}
+  .pages{margin-top:0;padding:0;margin-right:0!important}
+  .page{margin:0;box-shadow:none;page-break-after:always;width:210mm;min-height:297mm}
+  .page:last-child{page-break-after:avoid}
+}
+</style>
+<style id="dynamic-styles"></style>
+
+/* NOTIFICATION */
+#notify{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:#d4a843;color:#1a1208;
+  font-family:'Cinzel Decorative',serif;font-size:10px;letter-spacing:2px;
+  padding:10px 24px;border-radius:2px;z-index:99999;
+  transition:transform .3s cubic-bezier(.4,0,.2,1);pointer-events:none;
+}
+#notify.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body class="t-vintage">
+
+<!-- NOTIFICATION -->
+<div id="notify">✦ Cardápio atualizado ✦</div>
+
+<!-- UI BAR -->
+<div id="ui-bar">
+  <span class="ui-label" style="color:#d4a843;font-size:10px">Boteco Municipal</span>
+  <div class="ui-group">
+    <span class="ui-label">Tema</span>
+    <div class="theme-btns">
+      <button class="tbtn on" onclick="setTheme('vintage',this)">Vintage</button>
+      <button class="tbtn" onclick="setTheme('dark',this)">Dark</button>
+      <button class="tbtn" onclick="setTheme('classic',this)">Clássico</button>
+      <button class="tbtn" onclick="setTheme('kraft',this)">Kraft</button>
+      <button class="tbtn" onclick="setTheme('rubi',this)">Rubi</button>
+      <button class="tbtn" onclick="setTheme('floresta',this)">Floresta</button>
+      <button class="tbtn" onclick="setTheme('noite',this)">Noite</button>
+      <button class="tbtn" onclick="setTheme('marfim',this)">Marfim</button>
+    </div>
+  </div>
+  <div class="ui-sep"></div>
+  <div class="ui-group">
+    <span class="ui-label">Fonte</span>
+    <div class="font-btns">
+      <button class="fbtn on" onclick="setFont('classic',this)">Clássica</button>
+      <button class="fbtn" onclick="setFont('cormorant',this)">Elegante</button>
+      <button class="fbtn" onclick="setFont('garamond',this)">Literária</button>
+      <button class="fbtn" onclick="setFont('lora',this)">Refinada</button>
+    </div>
+  </div>
+  <div class="ui-sep"></div>
+  <button class="edit-btn" id="toggleEdit" onclick="toggleEditPanel()">✏ Editar</button>
+  <button class="dl-btn" onclick="window.print()">⬇ PDF</button>
+</div>
+
+<!-- EDIT PANEL -->
+<div id="edit-panel">
+  <div class="ep-header">
+    <div class="ep-title">✦ Editor de Cardápio</div>
+    <div class="ep-sub">Edite nomes, preços e descrições · Adicione ou remova itens</div>
+  </div>
+  <div class="ep-tabs">
+    <button class="ep-tab on" onclick="switchTab(0,this)">Almoço</button>
+    <button class="ep-tab" onclick="switchTab(1,this)">Sanduíches</button>
+    <button class="ep-tab" onclick="switchTab(2,this)">Porções</button>
+    <button class="ep-tab" onclick="switchTab(3,this)">Cervejas</button>
+    <button class="ep-tab" onclick="switchTab(4,this)">Doses</button>
+    <button class="ep-tab" onclick="switchTab(5,this)">Bebidas</button>
+    <button class="ep-tab" onclick="switchTab(6,this)">Drinks</button>
+    <button class="ep-tab" onclick="switchTab(7,this)">✦ Estilos</button>
+  </div>
+  <div class="ep-body" id="ep-body"></div>
+  <div class="ep-apply">
+    <button class="ep-apply-btn" onclick="applyAll()">✦ Aplicar Alterações</button>
+  </div>
+</div>
+
+<div class="pages" id="pages">
+
+<!-- ============ PAGE 1: ALMOÇO ============ -->
+<div class="page">
+<div class="frame">
+  <div class="crn tl"><svg viewBox="0 0 24 24" fill="none"><path d="M1 23V1h22" stroke="var(--gold)" stroke-width="2"/><path d="M1 23Q12 12 23 1" stroke="var(--gold)" stroke-width=".6" opacity=".5"/><circle cx="1" cy="1" r="2.5" fill="var(--gold)" opacity=".8"/></svg></div>
+  <div class="crn tr"><svg viewBox="0 0 24 24" fill="none"><path d="M1 23V1h22" stroke="var(--gold)" stroke-width="2"/><path d="M1 23Q12 12 23 1" stroke="var(--gold)" stroke-width=".6" opacity=".5"/><circle cx="1" cy="1" r="2.5" fill="var(--gold)" opacity=".8"/></svg></div>
+  <div class="crn bl"><svg viewBox="0 0 24 24" fill="none"><path d="M1 23V1h22" stroke="var(--gold)" stroke-width="2"/><path d="M1 23Q12 12 23 1" stroke="var(--gold)" stroke-width=".6" opacity=".5"/><circle cx="1" cy="1" r="2.5" fill="var(--gold)" opacity=".8"/></svg></div>
+  <div class="crn br"><svg viewBox="0 0 24 24" fill="none"><path d="M1 23V1h22" stroke="var(--gold)" stroke-width="2"/><path d="M1 23Q12 12 23 1" stroke="var(--gold)" stroke-width=".6" opacity=".5"/><circle cx="1" cy="1" r="2.5" fill="var(--gold)" opacity=".8"/></svg></div>
+
+  <div class="hdr">
+    <div class="logo-wrap"><img src="logo_transparent.png" alt="Boteco Municipal"></div>
+    <div class="tagline">Bar &amp; Restaurante</div>
+  </div>
+
+  <div class="stitle"><h2>Almoço</h2></div>
+  <p class="ssub">Acompanhamento padrão: Arroz · Feijão · Salada · Fritas · Farofa</p>
+  <p class="choose">— Escolha sua proteína —</p>
+
+  <div id="almoco-list">
+    <div class="mi" data-section="almoco" data-idx="0"><div class="mi-top"><div class="mn">Alcatra</div><div class="mw">+/– 150g</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+    <div class="mi" data-section="almoco" data-idx="1"><div class="mi-top"><div class="mn">Bife de Ancho</div><div class="mw">+/– 200g</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+    <div class="mi" data-section="almoco" data-idx="2"><div class="mi-top"><div class="mn">Bisteca Suína</div><div class="mw">+/– 160g</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+    <div class="mi" data-section="almoco" data-idx="3"><div class="mi-top"><div class="mn">Bife de Alcatra</div><div class="mw">+/– 100g</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+    <div class="mi" data-section="almoco" data-idx="4"><div class="mi-top"><div class="mn">Contra Filé</div><div class="mw">+/– 200g</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+    <div class="mi" data-section="almoco" data-idx="5"><div class="mi-top"><div class="mn">Peito de Frango</div><div class="mw">+/– 120g</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+    <div class="mi" data-section="almoco" data-idx="6"><div class="mi-top"><div class="mn">Picanha</div><div class="mw">+/– 200g</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+    <div class="mi" data-section="almoco" data-idx="7"><div class="mi-top"><div class="mn">Sobrecoxa em Cubos</div><div class="mw">+/– 200g</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+    <div class="mi" data-section="almoco" data-idx="8"><div class="mi-top"><div class="mn">Vegetariano</div><div class="mw">2 ovos</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+  </div>
+
+  <div class="dline"></div>
+
+  <div class="stitle"><h2 style="font-size:9pt">Filé à Parmegiana</h2></div>
+  <p class="ssub" style="margin-bottom:3mm">Acompanha Arroz · Salada · Fritas</p>
+
+  <div class="two">
+    <div>
+      <div class="ctitle">Mignon</div>
+      <div class="si" data-section="parmegiana" data-idx="0"><span class="sn">Individual</span><span class="price-display"></span></div>
+      <div class="si" data-section="parmegiana" data-idx="1"><span class="sn">Duas pessoas</span><span class="price-display"></span></div>
+      <div class="si" data-section="parmegiana" data-idx="2"><span class="sn">Três pessoas</span><span class="price-display"></span></div>
+    </div>
+    <div>
+      <div class="ctitle">Frango</div>
+      <div class="si" data-section="parmegiana" data-idx="3"><span class="sn">Individual</span><span class="price-display"></span></div>
+      <div class="si" data-section="parmegiana" data-idx="4"><span class="sn">Duas pessoas</span><span class="price-display"></span></div>
+      <div class="si" data-section="parmegiana" data-idx="5"><span class="sn">Três pessoas</span><span class="price-display"></span></div>
+    </div>
+  </div>
+  <p class="note">✦ Somente aos sábados e domingos ✦</p>
+
+  <div class="dline" style="margin-top:4mm"></div>
+
+  <div class="stitle"><h2 style="font-size:9pt">Feijoada</h2></div>
+  <p class="ssub" style="margin-bottom:2mm">Somente aos sábados</p>
+
+  <div class="sbox">
+    <div class="si" data-section="feijoada" data-idx="0"><span class="sn">Individual</span><span class="price-display"></span></div>
+    <div class="si" style="margin-bottom:0" data-section="feijoada" data-idx="1"><span class="sn">Duas pessoas</span><span class="price-display"></span></div>
+  </div>
+
+  <div class="chef"><span>Prato do Chef — consultar garçom</span></div>
+
+  <div class="taxa">
+    <div class="taxa-inner">
+      <span class="taxa-star">✦</span>
+      <div class="taxa-text">Taxa de Serviço 10%<em>Opcional — a critério do cliente</em></div>
+      <span class="taxa-star">✦</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ============ PAGE 2: SANDUÍCHE + PORÇÕES ============ -->
+<div class="page">
+<div class="frame">
+  <div class="crn tl"><svg viewBox="0 0 24 24" fill="none"><path d="M1 23V1h22" stroke="var(--gold)" stroke-width="2"/><path d="M1 23Q12 12 23 1" stroke="var(--gold)" stroke-width=".6" opacity=".5"/><circle cx="1" cy="1" r="2.5" fill="var(--gold)" opacity=".8"/></svg></div>
+  <div class="crn tr"><svg viewBox="0 0 24 24" fill="none"><path d="M1 23V1h22" stroke="var(--gold)" stroke-width="2"/><path d="M1 23Q12 12 23 1" stroke="var(--gold)" stroke-width=".6" opacity=".5"/><circle cx="1" cy="1" r="2.5" fill="var(--gold)" opacity=".8"/></svg></div>
+  <div class="crn bl"><svg viewBox="0 0 24 24" fill="none"><path d="M1 23V1h22" stroke="var(--gold)" stroke-width="2"/><path d="M1 23Q12 12 23 1" stroke="var(--gold)" stroke-width=".6" opacity=".5"/><circle cx="1" cy="1" r="2.5" fill="var(--gold)" opacity=".8"/></svg></div>
+  <div class="crn br"><svg viewBox="0 0 24 24" fill="none"><path d="M1 23V1h22" stroke="var(--gold)" stroke-width="2"/><path d="M1 23Q12 12 23 1" stroke="var(--gold)" stroke-width=".6" opacity=".5"/><circle cx="1" cy="1" r="2.5" fill="var(--gold)" opacity=".8"/></svg></div>
+
+  <div class="hdr">
+    <div class="logo-wrap"><img src="logo_transparent.png" alt="Boteco Municipal"></div>
+    <div class="tagline">Bar &amp; Restaurante</div>
+  </div>
+
+  <div class="split">
+    <div class="split-col">
+      <div class="stitle"><h2 style="font-size:10pt">Sanduíche</h2></div>
+      <div id="sanduiche-list">
+        <div class="mi" style="align-items:flex-start;margin-bottom:3mm" data-section="sanduiche" data-idx="0">
+          <div class="mi-top">
+            <div class="mn">Pão com Bolinho</div>
+            <div class="md">Blend de carnes, temperos, ervas e especiarias. Maionese com alho e bacon, creme de queijo cheddar e cebolinha. Pão francês, acompanha batata frita</div>
+          </div>
+          <span class="price-display" style="margin-top:2px"></span>
+        </div>
+        <div class="mi" style="align-items:flex-start;margin-bottom:3mm" data-section="sanduiche" data-idx="1">
+          <div class="mi-top">
+            <div class="mn">Pork</div>
+            <div class="md">Lombo de porco, mel, barbecue, especiarias, rúcula e queijo mussarela</div>
+          </div>
+          <span class="price-display" style="margin-top:2px"></span>
+        </div>
+        <div class="mi" style="align-items:flex-start;margin-bottom:3mm" data-section="sanduiche" data-idx="2">
+          <div class="mi-top">
+            <div class="mn">Pão com Bifé de Alcatra</div>
+            <div class="md">Bife e maionese · +R$3 queijo · +R$3 ovo</div>
+          </div>
+          <span class="price-display" style="margin-top:2px"></span>
+        </div>
+        <div class="mi" style="align-items:flex-start;margin-bottom:3mm" data-section="sanduiche" data-idx="3">
+          <div class="mi-top">
+            <div class="mn">Pão com Linguiça</div>
+            <div class="md">Calabresa na chapa com cebola e ervas frescas · +R$3 queijo · +R$3 ovo</div>
+          </div>
+          <span class="price-display" style="margin-top:2px"></span>
+        </div>
+        <div class="mi" style="align-items:flex-start" data-section="sanduiche" data-idx="4">
+          <div class="mi-top">
+            <div class="mn">Sanduíche de Panceta</div>
+            <div class="md">Panceta marinada na cachaça e chopp, especiarias, salsinha, cebolinha e coentro, molho mostarda e mel. Pão francês</div>
+          </div>
+          <span class="price-display" style="margin-top:2px"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="split-col">
+      <div class="stitle"><h2 style="font-size:10pt">Porções</h2></div>
+      <div id="porcoes-list">
+        <div class="mi" data-section="porcoes" data-idx="0"><div class="mi-top"><div class="mn">Batata Frita</div><div class="mw">Porção 400g</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+        <div class="mi" data-section="porcoes" data-idx="1"><div class="mi-top"><div class="mn">Batata Frita</div><div class="mw">Meia porção 200g</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+        <div class="mi" data-section="porcoes" data-idx="2"><div class="mi-top"><div class="mn">Batata Cheddar e Bacon</div><div class="mw">Porção 400g</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+        <div class="mi" data-section="porcoes" data-idx="3"><div class="mi-top"><div class="mn">Batata Cheddar e Bacon</div><div class="mw">Meia porção 200g</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+        <div class="mi" style="align-items:flex-start;margin-bottom:2mm" data-section="porcoes" data-idx="4">
+          <div class="mi-top"><div class="mn">Bolinho Abóbora c/ Costela</div><div class="md">Costela desfiada, massa de abóbora cabotiá assada com azeite · 6 un</div></div>
+          <span class="price-display" style="margin-top:2px"></span>
+        </div>
+        <div class="mi" style="align-items:flex-start;margin-bottom:2mm" data-section="porcoes" data-idx="5">
+          <div class="mi-top"><div class="mn">Calabresa Acebolada 200g</div><div class="md">Acompanha farofa e pão fatiado</div></div>
+          <span class="price-display" style="margin-top:2px"></span>
+        </div>
+        <div class="mi" style="align-items:flex-start;margin-bottom:2mm" data-section="porcoes" data-idx="6">
+          <div class="mi-top"><div class="mn">Croquete de Bacalhau</div><div class="md">Acompanha pimenta caseira · 6 un</div></div>
+          <span class="price-display" style="margin-top:2px"></span>
+        </div>
+        <div class="mi" style="align-items:flex-start;margin-bottom:2mm" data-section="porcoes" data-idx="7">
+          <div class="mi-top"><div class="mn">Mini Coxinha Frango</div><div class="md">Servida com molho barbecue · 10 un</div></div>
+          <span class="price-display" style="margin-top:2px"></span>
+        </div>
+        <div class="mi" style="align-items:flex-start" data-section="porcoes" data-idx="8">
+          <div class="mi-top"><div class="mn">Torresmo Municipal</div><div class="md">Marinado na cachaça, assado com ervas, mel e laranja. Pimenta da casa · 250g</div></div>
+          <span class="price-display" style="margin-top:2px"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="taxa">
+    <div class="taxa-inner">
+      <span class="taxa-star">✦</span>
+      <div class="taxa-text">Taxa de Serviço 10%<em>Opcional — a critério do cliente</em></div>
+      <span class="taxa-star">✦</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ============ PAGE 3: CERVEJAS + BEBIDAS + DRINKS ============ -->
+<div class="page">
+<div class="frame">
+  <div class="crn tl"><svg viewBox="0 0 24 24" fill="none"><path d="M1 23V1h22" stroke="var(--gold)" stroke-width="2"/><path d="M1 23Q12 12 23 1" stroke="var(--gold)" stroke-width=".6" opacity=".5"/><circle cx="1" cy="1" r="2.5" fill="var(--gold)" opacity=".8"/></svg></div>
+  <div class="crn tr"><svg viewBox="0 0 24 24" fill="none"><path d="M1 23V1h22" stroke="var(--gold)" stroke-width="2"/><path d="M1 23Q12 12 23 1" stroke="var(--gold)" stroke-width=".6" opacity=".5"/><circle cx="1" cy="1" r="2.5" fill="var(--gold)" opacity=".8"/></svg></div>
+  <div class="crn bl"><svg viewBox="0 0 24 24" fill="none"><path d="M1 23V1h22" stroke="var(--gold)" stroke-width="2"/><path d="M1 23Q12 12 23 1" stroke="var(--gold)" stroke-width=".6" opacity=".5"/><circle cx="1" cy="1" r="2.5" fill="var(--gold)" opacity=".8"/></svg></div>
+  <div class="crn br"><svg viewBox="0 0 24 24" fill="none"><path d="M1 23V1h22" stroke="var(--gold)" stroke-width="2"/><path d="M1 23Q12 12 23 1" stroke="var(--gold)" stroke-width=".6" opacity=".5"/><circle cx="1" cy="1" r="2.5" fill="var(--gold)" opacity=".8"/></svg></div>
+
+  <div class="hdr">
+    <div class="logo-wrap"><img src="logo_transparent.png" alt="Boteco Municipal"></div>
+    <div class="tagline">Bar &amp; Restaurante</div>
+  </div>
+
+  <div class="drinks-grid">
+    <div class="drinks-col">
+      <div class="dcol-box">
+        <div class="stitle" style="margin:0 0 3mm"><h2 style="font-size:9pt">Cervejas</h2></div>
+        <div id="cervejas-list">
+          <div class="mi sm" data-section="cervejas" data-idx="0"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Brahma 600ml</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="cervejas" data-idx="1"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Budweiser 600ml</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="cervejas" data-idx="2"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Eisenbahn 600ml</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="cervejas" data-idx="3"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Estrela Galicia 600ml</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="cervejas" data-idx="4"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Heineken 600ml</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="cervejas" data-idx="5"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Original 600ml</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="cervejas" data-idx="6"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Therezópolis 600ml</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="cervejas" data-idx="7"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Estrela Galicia 330ml</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="cervejas" data-idx="8"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Heineken 330ml</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" style="margin-bottom:0" data-section="cervejas" data-idx="9"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Heineken S/Álcool 330ml</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+        </div>
+      </div>
+      <div class="dcol-box">
+        <div class="stitle" style="margin:0 0 3mm"><h2 style="font-size:9pt">Doses</h2></div>
+        <div id="doses-list">
+          <div class="mi sm" data-section="doses" data-idx="0"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Cachaça</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="doses" data-idx="1"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Campari</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="doses" data-idx="2"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Conhaque</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="doses" data-idx="3"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Gin Doble W</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="doses" data-idx="4"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Jack Daniels</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="doses" data-idx="5"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Rum</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="doses" data-idx="6"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Vodka</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="doses" data-idx="7"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Whisky 8 Anos</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" style="margin-bottom:0" data-section="doses" data-idx="8"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Whisky 12 Anos</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="drinks-col">
+      <div class="dcol-box">
+        <div class="stitle" style="margin:0 0 3mm"><h2 style="font-size:9pt">Bebidas</h2></div>
+        <div id="bebidas-list">
+          <div class="mi sm" data-section="bebidas" data-idx="0"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Água sem gás</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="bebidas" data-idx="1"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Água com gás</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="bebidas" data-idx="2"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Energético Monster</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="bebidas" data-idx="3"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Energético Red Bull</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="bebidas" data-idx="4"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Refrigerante Lata</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="bebidas" data-idx="5"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Refrigerante KS</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="bebidas" data-idx="6"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Maté Batido (sabores)</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="bebidas" data-idx="7"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Suco de Laranja Integral</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="bebidas" data-idx="8"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Suco de Uva Integral</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="bebidas" data-idx="9"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Suco Del Valle Sabores</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="bebidas" data-idx="10"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Soda Italiana</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" style="margin-bottom:0" data-section="bebidas" data-idx="11"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Sprite Lemon</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+        </div>
+      </div>
+      <div class="dcol-box">
+        <div class="stitle" style="margin:0 0 2mm"><h2 style="font-size:9pt">Drinks</h2></div>
+        <div class="caip">Caipiras:</div>
+        <div id="drinks-list">
+          <div class="mi sm" data-section="drinks" data-idx="0"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Cachaça</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="drinks" data-idx="1"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Vodka</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="drinks" data-idx="2"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Rum</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="drinks" data-idx="3"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Saquê</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="dline" style="margin:2mm 0"></div>
+          <div class="mi sm" data-section="drinks" data-idx="4"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Gin Tônica</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="drinks" data-idx="5"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Cuba Libre</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" data-section="drinks" data-idx="6"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Jack and Coke</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+          <div class="mi sm" style="margin-bottom:0" data-section="drinks" data-idx="7"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Negroni</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chopp">
+    <div class="chopp-t">— Chopp —</div>
+    <div class="chopp-d">10 torneiras de chopp artesanal · Consulte nosso taplist</div>
+  </div>
+
+  <div class="taxa">
+    <div class="taxa-inner">
+      <span class="taxa-star">✦</span>
+      <div class="taxa-text">Taxa de Serviço 10%<em>Opcional — a critério do cliente</em></div>
+      <span class="taxa-star">✦</span>
+    </div>
+  </div>
+</div>
+</div>
+
+</div><!-- /pages -->
+
+<script>
+// ============ DATA STORE ============
+// Each section maps to array of {name, sub, desc, price}
+const sections = {
+  almoco: [], parmegiana: [], feijoada: [],
+  sanduiche: [], porcoes: [],
+  cervejas: [], doses: [], bebidas: [], drinks: []
+};
+
+// Initialize from DOM
+function initFromDOM() {
+  // almoco
+  const almocoItems = [
+    {name:'Alcatra',sub:'+/– 150g',desc:'',price:''},
+    {name:'Bife de Ancho',sub:'+/– 200g',desc:'',price:''},
+    {name:'Bisteca Suína',sub:'+/– 160g',desc:'',price:''},
+    {name:'Bife de Alcatra',sub:'+/– 100g',desc:'',price:''},
+    {name:'Contra Filé',sub:'+/– 200g',desc:'',price:''},
+    {name:'Peito de Frango',sub:'+/– 120g',desc:'',price:''},
+    {name:'Picanha',sub:'+/– 200g',desc:'',price:''},
+    {name:'Sobrecoxa em Cubos',sub:'+/– 200g',desc:'',price:''},
+    {name:'Vegetariano',sub:'2 ovos',desc:'',price:''},
+  ];
+  sections.almoco = almocoItems;
+
+  sections.parmegiana = [
+    {name:'Mignon Individual',sub:'',desc:'',price:''},
+    {name:'Mignon Duas pessoas',sub:'',desc:'',price:''},
+    {name:'Mignon Três pessoas',sub:'',desc:'',price:''},
+    {name:'Frango Individual',sub:'',desc:'',price:''},
+    {name:'Frango Duas pessoas',sub:'',desc:'',price:''},
+    {name:'Frango Três pessoas',sub:'',desc:'',price:''},
+  ];
+
+  sections.feijoada = [
+    {name:'Individual',sub:'',desc:'',price:''},
+    {name:'Duas pessoas',sub:'',desc:'',price:''},
+  ];
+
+  sections.sanduiche = [
+    {name:'Pão com Bolinho',sub:'',desc:'Blend de carnes, temperos, ervas e especiarias. Maionese com alho e bacon, creme de queijo cheddar e cebolinha. Pão francês, acompanha batata frita',price:''},
+    {name:'Pork',sub:'',desc:'Lombo de porco, mel, barbecue, especiarias, rúcula e queijo mussarela',price:''},
+    {name:'Pão com Bifé de Alcatra',sub:'',desc:'Bife e maionese · +R$3 queijo · +R$3 ovo',price:''},
+    {name:'Pão com Linguiça',sub:'',desc:'Calabresa na chapa com cebola e ervas frescas · +R$3 queijo · +R$3 ovo',price:''},
+    {name:'Sanduíche de Panceta',sub:'',desc:'Panceta marinada na cachaça e chopp, especiarias, salsinha, cebolinha e coentro, molho mostarda e mel. Pão francês',price:''},
+  ];
+
+  sections.porcoes = [
+    {name:'Batata Frita',sub:'Porção 400g',desc:'',price:''},
+    {name:'Batata Frita',sub:'Meia porção 200g',desc:'',price:''},
+    {name:'Batata Cheddar e Bacon',sub:'Porção 400g',desc:'',price:''},
+    {name:'Batata Cheddar e Bacon',sub:'Meia porção 200g',desc:'',price:''},
+    {name:'Bolinho Abóbora c/ Costela',sub:'',desc:'Costela desfiada, massa de abóbora cabotiá assada com azeite · 6 un',price:''},
+    {name:'Calabresa Acebolada 200g',sub:'',desc:'Acompanha farofa e pão fatiado',price:''},
+    {name:'Croquete de Bacalhau',sub:'',desc:'Acompanha pimenta caseira · 6 un',price:''},
+    {name:'Mini Coxinha Frango',sub:'',desc:'Servida com molho barbecue · 10 un',price:''},
+    {name:'Torresmo Municipal',sub:'',desc:'Marinado na cachaça, assado com ervas, mel e laranja. Pimenta da casa · 250g',price:''},
+  ];
+
+  sections.cervejas = [
+    'Brahma 600ml','Budweiser 600ml','Eisenbahn 600ml','Estrela Galicia 600ml',
+    'Heineken 600ml','Original 600ml','Therezópolis 600ml',
+    'Estrela Galicia 330ml','Heineken 330ml','Heineken S/Álcool 330ml'
+  ].map(n=>({name:n,sub:'',desc:'',price:''}));
+
+  sections.doses = [
+    'Cachaça','Campari','Conhaque','Gin Doble W','Jack Daniels','Rum','Vodka','Whisky 8 Anos','Whisky 12 Anos'
+  ].map(n=>({name:n,sub:'',desc:'',price:''}));
+
+  sections.bebidas = [
+    'Água sem gás','Água com gás','Energético Monster','Energético Red Bull',
+    'Refrigerante Lata','Refrigerante KS','Maté Batido (sabores)',
+    'Suco de Laranja Integral','Suco de Uva Integral','Suco Del Valle Sabores','Soda Italiana','Sprite Lemon'
+  ].map(n=>({name:n,sub:'',desc:'',price:''}));
+
+  sections.drinks = [
+    'Cachaça','Vodka','Rum','Saquê','Gin Tônica','Cuba Libre','Jack and Coke','Negroni'
+  ].map(n=>({name:n,sub:'',desc:'',price:''}));
+}
+
+// ============ THEME ============
+function setTheme(t, btn) {
+  document.body.className = document.body.className.replace(/t-\w+/,'') + ' t-' + t;
+  document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('.stitle h2').forEach(el=>{el.style.background='var(--bg)'});
+}
+
+// ============ FONT ============
+function setFont(f, btn) {
+  document.body.className = document.body.className.replace(/f-\w+/,'').trim();
+  if(f !== 'classic') document.body.className += ' f-' + f;
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+// ============ STYLE CONFIG ============
+const styleConfig = {
+  itemNameSize:    8.5,
+  itemNameSpacing: 0.5,
+  itemNameWeight:  700,
+  priceSize:       8.0,
+  sectionSize:    10.5,
+  sectionSpacing:  3,
+  descSize:        6.5,
+  subSize:         6.5,
+  taglineSize:     7.5,
+  taxaSize:        8.0,
+  itemSpacing:     1.8,
+  logoSize:        72,
+  pageMarginH:     12,
+  pageMarginV:     14,
+};
+
+function applyDynStyles() {
+  const s = styleConfig;
+  document.getElementById('dynamic-styles').textContent = `
+    .mn { font-size:${s.itemNameSize}pt !important; letter-spacing:${s.itemNameSpacing}px !important; font-weight:${s.itemNameWeight} !important; }
+    .price-display { font-size:${s.priceSize}pt !important; }
+    .stitle h2 { font-size:${s.sectionSize}pt !important; letter-spacing:${s.sectionSpacing}px !important; }
+    .md { font-size:${s.descSize}pt !important; }
+    .mw { font-size:${s.subSize}pt !important; }
+    .tagline { font-size:${s.taglineSize}pt !important; }
+    .taxa-text { font-size:${s.taxaSize}pt !important; }
+    .mi { margin-bottom:${s.itemSpacing}mm !important; }
+    .logo-wrap { width:${s.logoSize}px !important; height:${s.logoSize}px !important; }
+    .page { padding:${s.pageMarginV}mm ${s.pageMarginH}mm !important; }
+  `;
+}
+
+function renderStyleTab() {
+  const body = document.getElementById('ep-body');
+  const s = styleConfig;
+
+  const row = (label, key, min, max, step, unit='pt') => `
+    <div class="ep-item" style="padding:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div class="ep-label" style="font-size:10px;color:#d4a843">${label}</div>
+        <span id="sv-${key}" style="font-family:'Playfair Display',serif;color:#e8dcc8;font-size:12px;min-width:40px;text-align:right">${s[key]}${unit}</span>
+      </div>
+      <input type="range" min="${min}" max="${max}" step="${step}" value="${s[key]}"
+        style="width:100%;accent-color:#d4a843;cursor:pointer"
+        oninput="styleConfig['${key}']=parseFloat(this.value);document.getElementById('sv-${key}').textContent=this.value+'${unit}';applyDynStyles()">
+    </div>`;
+
+  body.innerHTML = `
+    <div class="ep-section">
+      <div class="ep-section-title">Nomes dos Itens</div>
+      ${row('Tamanho', 'itemNameSize', 5, 16, 0.5)}
+      ${row('Espaçamento letras', 'itemNameSpacing', -1, 5, 0.25, 'px')}
+      ${row('Peso (400=normal 700=bold)', 'itemNameWeight', 400, 900, 100, '')}
+    </div>
+    <div class="ep-section">
+      <div class="ep-section-title">Preços</div>
+      ${row('Tamanho', 'priceSize', 5, 16, 0.5)}
+    </div>
+    <div class="ep-section">
+      <div class="ep-section-title">Títulos de Seção</div>
+      ${row('Tamanho', 'sectionSize', 6, 20, 0.5)}
+      ${row('Espaçamento letras', 'sectionSpacing', 0, 10, 0.5, 'px')}
+    </div>
+    <div class="ep-section">
+      <div class="ep-section-title">Textos Secundários</div>
+      ${row('Descrições (.md)', 'descSize', 4, 12, 0.5)}
+      ${row('Gramagem/subtítulo (.mw)', 'subSize', 4, 12, 0.5)}
+      ${row('Tagline (Bar & Rest.)', 'taglineSize', 4, 14, 0.5)}
+      ${row('Taxa de serviço', 'taxaSize', 4, 14, 0.5)}
+    </div>
+    <div class="ep-section">
+      <div class="ep-section-title">Layout & Espaçamento</div>
+      ${row('Espaço entre itens', 'itemSpacing', 0, 6, 0.25, 'mm')}
+      ${row('Tamanho do logo', 'logoSize', 32, 120, 4, 'px')}
+      ${row('Margens horizontais da página', 'pageMarginH', 6, 25, 1, 'mm')}
+      ${row('Margens verticais da página', 'pageMarginV', 6, 25, 1, 'mm')}
+    </div>
+    <div style="padding:10px 0">
+      <button class="ep-add-btn" onclick="resetStyles()">↺ Restaurar padrões</button>
+    </div>
+  `;
+}
+
+function resetStyles() {
+  styleConfig.itemNameSize=8.5; styleConfig.itemNameSpacing=0.5; styleConfig.itemNameWeight=700;
+  styleConfig.priceSize=8; styleConfig.sectionSize=10.5; styleConfig.sectionSpacing=3;
+  styleConfig.descSize=6.5; styleConfig.subSize=6.5; styleConfig.taglineSize=7.5;
+  styleConfig.taxaSize=8; styleConfig.itemSpacing=1.8; styleConfig.logoSize=72;
+  styleConfig.pageMarginH=12; styleConfig.pageMarginV=14;
+  applyDynStyles();
+  renderStyleTab();
+}
+
+// ============ PANEL ============
+let panelOpen = false;
+let currentTab = 0;
+const tabSections = ['almoco','sanduiche','porcoes','cervejas','doses','bebidas','drinks'];
+
+function toggleEditPanel() {
+  panelOpen = !panelOpen;
+  document.getElementById('edit-panel').classList.toggle('open', panelOpen);
+  document.getElementById('pages').classList.toggle('panel-open', panelOpen);
+  document.getElementById('toggleEdit').classList.toggle('active', panelOpen);
+  if(panelOpen) renderTab(currentTab);
+}
+
+function switchTab(idx, btn) {
+  currentTab = idx;
+  document.querySelectorAll('.ep-tab').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  if(idx === 7) { renderStyleTab(); return; }
+  renderTab(idx);
+}
+
+// ============ RENDER EDITOR TAB ============
+function renderTab(idx) {
+  const sec = tabSections[idx];
+  const data = sections[sec];
+  const body = document.getElementById('ep-body');
+
+  const hasSub = sec === 'almoco' || sec === 'porcoes';
+  const hasDesc = sec === 'sanduiche' || sec === 'porcoes';
+
+  let html = `<div class="ep-section">
+    <div class="ep-section-title">${secLabel(sec)}</div>`;
+
+  data.forEach((item, i) => {
+    html += `<div class="ep-item" id="ep-item-${sec}-${i}">
+      <div class="ep-row">
+        <div class="ep-field">
+          <div class="ep-label">Nome</div>
+          <input class="ep-input" id="ei-name-${sec}-${i}" value="${escHtml(item.name)}" placeholder="Nome do item">
+        </div>
+        <div class="ep-field" style="max-width:90px">
+          <div class="ep-label">Preço</div>
+          <input class="ep-input price-field" id="ei-price-${sec}-${i}" value="${escHtml(item.price)}" placeholder="R$ 0,00">
+        </div>
+        <button class="ep-del" onclick="deleteItem('${sec}',${i})" title="Remover">✕</button>
+      </div>`;
+
+    if(hasSub) {
+      html += `<div class="ep-row">
+        <div class="ep-field">
+          <div class="ep-label">Subtítulo (gramagem etc)</div>
+          <input class="ep-input" id="ei-sub-${sec}-${i}" value="${escHtml(item.sub)}" placeholder="Ex: +/– 200g">
+        </div>
+      </div>`;
+    }
+
+    if(hasDesc || item.desc) {
+      html += `<div class="ep-row">
+        <div class="ep-field">
+          <div class="ep-label">Descrição</div>
+          <input class="ep-input" id="ei-desc-${sec}-${i}" value="${escHtml(item.desc)}" placeholder="Ingredientes, observações...">
+        </div>
+      </div>`;
+    }
+
+    html += `</div>`;
+  });
+
+  html += `<button class="ep-add-btn" onclick="addItem('${sec}')">+ Adicionar item em ${secLabel(sec)}</button>`;
+  html += `</div>`;
+
+  body.innerHTML = html;
+}
+
+function secLabel(sec) {
+  const labels = {almoco:'Almoço',sanduiche:'Sanduíches',porcoes:'Porções',cervejas:'Cervejas',doses:'Doses',bebidas:'Bebidas',drinks:'Drinks'};
+  return labels[sec] || sec;
+}
+
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ============ ADD / DELETE ============
+function addItem(sec) {
+  sections[sec].push({name:'Novo Item',sub:'',desc:'',price:''});
+  renderTab(currentTab);
+  // Scroll to last item
+  setTimeout(()=>{
+    const body = document.getElementById('ep-body');
+    body.scrollTop = body.scrollHeight;
+  },50);
+}
+
+function deleteItem(sec, idx) {
+  if(sections[sec].length <= 1) return;
+  sections[sec].splice(idx,1);
+  renderTab(currentTab);
+}
+
+// ============ APPLY ============
+function applyAll() {
+  // Collect from all tabs by reading inputs that exist
+  tabSections.forEach(sec => {
+    sections[sec].forEach((item, i) => {
+      const nameEl = document.getElementById(`ei-name-${sec}-${i}`);
+      const priceEl = document.getElementById(`ei-price-${sec}-${i}`);
+      const subEl = document.getElementById(`ei-sub-${sec}-${i}`);
+      const descEl = document.getElementById(`ei-desc-${sec}-${i}`);
+      if(nameEl) item.name = nameEl.value;
+      if(priceEl) item.price = priceEl.value;
+      if(subEl) item.sub = subEl.value;
+      if(descEl) item.desc = descEl.value;
+    });
+  });
+
+  applyToMenu();
+  showNotify();
+}
+
+function applyToMenu() {
+  // ALMOÇO
+  rebuildList('almoco-list', sections.almoco, 'almoco', (item,i) => `
+    <div class="mi" data-section="almoco" data-idx="${i}">
+      <div class="mi-top">
+        <div class="mn">${item.name}</div>
+        ${item.sub ? `<div class="mw">${item.sub}</div>` : ''}
+      </div>
+      <div class="pline"><span class="dots"></span><span class="price-display">${fmtPrice(item.price)}</span></div>
+    </div>`);
+
+  // PARMEGIANA & FEIJOADA (fixed structure, just update prices)
+  updateSiItems('parmegiana', sections.parmegiana);
+  updateSiItems('feijoada', sections.feijoada);
+
+  // SANDUÍCHES
+  rebuildList('sanduiche-list', sections.sanduiche, 'sanduiche', (item,i) => `
+    <div class="mi" style="align-items:flex-start;margin-bottom:3mm" data-section="sanduiche" data-idx="${i}">
+      <div class="mi-top">
+        <div class="mn">${item.name}</div>
+        ${item.desc ? `<div class="md">${item.desc}</div>` : ''}
+      </div>
+      <span class="price-display" style="margin-top:2px">${fmtPrice(item.price)}</span>
+    </div>`);
+
+  // PORÇÕES
+  rebuildList('porcoes-list', sections.porcoes, 'porcoes', (item,i) => {
+    const hasDesc = item.desc && !item.sub;
+    if(hasDesc) return `
+      <div class="mi" style="align-items:flex-start;margin-bottom:2mm" data-section="porcoes" data-idx="${i}">
+        <div class="mi-top"><div class="mn">${item.name}</div><div class="md">${item.desc}</div></div>
+        <span class="price-display" style="margin-top:2px">${fmtPrice(item.price)}</span>
+      </div>`;
+    return `
+      <div class="mi" data-section="porcoes" data-idx="${i}">
+        <div class="mi-top">
+          <div class="mn">${item.name}</div>
+          ${item.sub ? `<div class="mw">${item.sub}</div>` : ''}
+          ${item.desc ? `<div class="md">${item.desc}</div>` : ''}
+        </div>
+        <div class="pline"><span class="dots"></span><span class="price-display">${fmtPrice(item.price)}</span></div>
+      </div>`;
+  });
+
+  // CERVEJAS
+  rebuildListSm('cervejas-list', sections.cervejas, 'cervejas');
+  // DOSES
+  rebuildListSm('doses-list', sections.doses, 'doses');
+  // BEBIDAS
+  rebuildListSm('bebidas-list', sections.bebidas, 'bebidas');
+  // DRINKS
+  rebuildListSm('drinks-list', sections.drinks, 'drinks');
+}
+
+function rebuildList(listId, items, sec, tplFn) {
+  const el = document.getElementById(listId);
+  if(!el) return;
+  el.innerHTML = items.map((item,i) => tplFn(item,i)).join('');
+}
+
+function rebuildListSm(listId, items, sec) {
+  const el = document.getElementById(listId);
+  if(!el) return;
+  el.innerHTML = items.map((item,i) => `
+    <div class="mi sm" data-section="${sec}" data-idx="${i}">
+      <div class="mi-top"><div class="mn" style="font-size:7.5pt">${item.name}</div></div>
+      <div class="pline"><span class="dots"></span><span class="price-display">${fmtPrice(item.price)}</span></div>
+    </div>`).join('');
+}
+
+function updateSiItems(sec, items) {
+  document.querySelectorAll(`[data-section="${sec}"]`).forEach(el => {
+    const idx = parseInt(el.dataset.idx);
+    if(items[idx]) {
+      const pd = el.querySelector('.price-display');
+      if(pd) pd.textContent = fmtPrice(items[idx].price);
+      const sn = el.querySelector('.sn');
+      if(sn) sn.textContent = items[idx].name;
+    }
+  });
+}
+
+function fmtPrice(p) {
+  if(!p || p.trim() === '') return '';
+  // If already has R$, return as is
+  if(p.includes('R$') || p.includes('$')) return p.trim();
+  // Try to parse as number
+  const n = parseFloat(p.replace(',','.'));
+  if(!isNaN(n)) return 'R$ ' + n.toFixed(2).replace('.',',');
+  return p.trim();
+}
+
+// ============ NOTIFY ============
+function showNotify() {
+  const n = document.getElementById('notify');
+  n.classList.add('show');
+  setTimeout(()=>n.classList.remove('show'), 2500);
+}
+
+// ============ INIT ============
+initFromDOM();
+applyDynStyles();
+</script>
+</body>
+</html>
