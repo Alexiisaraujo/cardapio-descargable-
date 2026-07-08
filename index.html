@@ -411,6 +411,72 @@ body.t-kraft .logo-wrap img { mix-blend-mode:normal; filter:none; }
 .chopp-t{font-family:'Cinzel Decorative',serif;font-size:9pt;color:var(--brown);letter-spacing:3px}
 .chopp-d{font-family:var(--f-accent);font-style:italic;font-size:7.5pt;color:var(--gold);margin-top:1mm}
 
+/* BADGES */
+.badges{display:inline-flex;gap:3px;margin-left:5px;vertical-align:middle}
+.badge-tag{font-size:7.5pt;line-height:1}
+
+/* OUT OF STOCK */
+.mi.esgotado .mn{text-decoration:line-through;opacity:.55}
+.mi.esgotado .md,.mi.esgotado .mw{opacity:.4}
+.esgotado-label{
+  font-family:var(--f-accent);font-style:italic;font-size:7pt;
+  color:var(--gold);opacity:.8;white-space:nowrap;
+}
+
+/* CUSTOM SECTION PAGE */
+.custom-box{border:1px solid rgba(184,146,42,.25);padding:4mm 5mm;margin-bottom:4mm}
+.custom-box:last-child{margin-bottom:0}
+
+/* EDIT PANEL — drag reorder */
+.ep-item{cursor:default}
+.ep-drag{
+  cursor:grab;color:rgba(212,168,67,0.5);font-size:13px;
+  padding:0 4px;flex-shrink:0;user-select:none;
+}
+.ep-drag:active{cursor:grabbing}
+.ep-item.dragging{opacity:.4}
+.ep-item.drag-over{border-color:#d4a843;border-style:dashed}
+.ep-dup{
+  background:rgba(212,168,67,0.15);border:1px solid rgba(212,168,67,0.4);
+  color:#d4a843;font-size:11px;width:26px;height:26px;
+  cursor:pointer;border-radius:2px;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;transition:all .2s;
+}
+.ep-dup:hover{background:rgba(212,168,67,0.3)}
+.ep-badges-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
+.ep-badge-opt{
+  display:flex;align-items:center;gap:4px;cursor:pointer;
+  font-family:'Libre Baskerville',serif;font-size:9.5px;
+  color:rgba(212,168,67,0.75);
+}
+.ep-badge-opt input{accent-color:#d4a843;width:12px;height:12px;cursor:pointer}
+.ep-newsec-btn{
+  width:100%;padding:10px;background:transparent;
+  border:1.5px dashed #d4a843;color:#d4a843;
+  font-family:'Cinzel Decorative',serif;font-size:10px;
+  letter-spacing:1px;cursor:pointer;border-radius:2px;
+  text-transform:uppercase;margin-top:6px;
+}
+.ep-newsec-btn:hover{background:rgba(212,168,67,0.1)}
+.ep-rmsec-btn{
+  width:100%;padding:8px;background:rgba(180,50,50,0.15);
+  border:1px solid rgba(180,50,50,0.4);color:#e07070;
+  font-family:'Libre Baskerville',serif;font-size:10px;
+  letter-spacing:.5px;cursor:pointer;border-radius:2px;margin-top:14px;
+}
+.ep-rmsec-btn:hover{background:rgba(180,50,50,0.3)}
+.ep-color-row{display:flex;align-items:center;gap:10px;padding:10px 0}
+.ep-color-row input[type=color]{
+  width:40px;height:32px;border:1px solid rgba(212,168,67,0.3);
+  border-radius:3px;background:none;cursor:pointer;
+}
+.ep-file-btn{
+  display:inline-block;padding:8px 14px;background:transparent;
+  border:1.5px solid #d4a843;color:#d4a843;font-family:'Libre Baskerville',serif;
+  font-size:10px;cursor:pointer;border-radius:2px;text-align:center;
+}
+.ep-file-btn:hover{background:rgba(212,168,67,0.1)}
+
 /* PRINT */
 @page{
   size:A4;
@@ -476,6 +542,9 @@ body.t-kraft .logo-wrap img { mix-blend-mode:normal; filter:none; }
   </div>
   <div class="ui-sep"></div>
   <button class="edit-btn" id="toggleEdit" onclick="toggleEditPanel()">✏ Editar</button>
+  <button class="edit-btn" onclick="exportBackup()" title="Baixar backup dos dados">⬇ Backup</button>
+  <button class="edit-btn" onclick="document.getElementById('importFile').click()" title="Restaurar backup">⬆ Restaurar</button>
+  <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importBackup(this.files[0])">
   <button class="dl-btn" onclick="window.print()">⬇ PDF</button>
 </div>
 
@@ -485,16 +554,7 @@ body.t-kraft .logo-wrap img { mix-blend-mode:normal; filter:none; }
     <div class="ep-title">✦ Editor de Cardápio</div>
     <div class="ep-sub">Edite nomes, preços e descrições · Adicione ou remova itens</div>
   </div>
-  <div class="ep-tabs">
-    <button class="ep-tab on" onclick="switchTab(0,this)">Almoço</button>
-    <button class="ep-tab" onclick="switchTab(1,this)">Sanduíches</button>
-    <button class="ep-tab" onclick="switchTab(2,this)">Porções</button>
-    <button class="ep-tab" onclick="switchTab(3,this)">Cervejas</button>
-    <button class="ep-tab" onclick="switchTab(4,this)">Doses</button>
-    <button class="ep-tab" onclick="switchTab(5,this)">Bebidas</button>
-    <button class="ep-tab" onclick="switchTab(6,this)">Drinks</button>
-    <button class="ep-tab" onclick="switchTab(7,this)">✦ Estilos</button>
-  </div>
+  <div class="ep-tabs" id="ep-tabs"></div>
   <div class="ep-body" id="ep-body"></div>
   <div class="ep-apply">
     <button class="ep-apply-btn" onclick="applyAll()">✦ Aplicar Alterações</button>
@@ -768,30 +828,63 @@ body.t-kraft .logo-wrap img { mix-blend-mode:normal; filter:none; }
 </div>
 </div>
 
+<div class="page" id="extra-page" style="display:none">
+<div class="frame">
+  <div class="crn tl"><svg viewBox="0 0 24 24" fill="none"><path d="M1 23V1h22" stroke="var(--gold)" stroke-width="2"/><path d="M1 23Q12 12 23 1" stroke="var(--gold)" stroke-width=".6" opacity=".5"/><circle cx="1" cy="1" r="2.5" fill="var(--gold)" opacity=".8"/></svg></div>
+  <div class="crn tr"><svg viewBox="0 0 24 24" fill="none"><path d="M1 23V1h22" stroke="var(--gold)" stroke-width="2"/><path d="M1 23Q12 12 23 1" stroke="var(--gold)" stroke-width=".6" opacity=".5"/><circle cx="1" cy="1" r="2.5" fill="var(--gold)" opacity=".8"/></svg></div>
+  <div class="crn bl"><svg viewBox="0 0 24 24" fill="none"><path d="M1 23V1h22" stroke="var(--gold)" stroke-width="2"/><path d="M1 23Q12 12 23 1" stroke="var(--gold)" stroke-width=".6" opacity=".5"/><circle cx="1" cy="1" r="2.5" fill="var(--gold)" opacity=".8"/></svg></div>
+  <div class="crn br"><svg viewBox="0 0 24 24" fill="none"><path d="M1 23V1h22" stroke="var(--gold)" stroke-width="2"/><path d="M1 23Q12 12 23 1" stroke="var(--gold)" stroke-width=".6" opacity=".5"/><circle cx="1" cy="1" r="2.5" fill="var(--gold)" opacity=".8"/></svg></div>
+
+  <div class="hdr">
+    <div class="logo-wrap"><img src="logo_transparent.png" alt="Boteco Municipal"></div>
+    <div class="tagline">Bar &amp; Restaurante</div>
+  </div>
+
+  <div id="extra-sections-container"></div>
+
+  <div class="taxa">
+    <div class="taxa-inner">
+      <span class="taxa-star">✦</span>
+      <div class="taxa-text">Taxa de Serviço 10%<em>Opcional — a critério do cliente</em></div>
+      <span class="taxa-star">✦</span>
+    </div>
+  </div>
+</div>
+</div>
+
 </div><!-- /pages -->
 
 <script>
 // ============ DATA STORE ============
 // Each section maps to array of {name, sub, desc, price}
+// ============ DATA ============
+const baseTabSections = ['almoco','sanduiche','porcoes','cervejas','doses','bebidas','drinks'];
 const sections = {
   almoco: [], parmegiana: [], feijoada: [],
   sanduiche: [], porcoes: [],
   cervejas: [], doses: [], bebidas: [], drinks: []
 };
+let customSections = []; // [{id,title,items:[{name,desc,price,dots,esgotado,badges}]}]
+let customLogo = null; // dataURL or null
+const BADGE_OPTS = [
+  {key:'picante', icon:'🌶️', label:'Picante'},
+  {key:'vegano',  icon:'🌱', label:'Vegano'},
+  {key:'top',     icon:'⭐', label:'Mais pedido'},
+  {key:'novo',    icon:'🆕', label:'Novidade'},
+];
 
-// Initialize from DOM
-function initFromDOM() {
+function defaultData() {
   // almoco
   const almocoItems = [
-    {name:'Alcatra',sub:'+/– 150g',desc:'',price:''},
-    {name:'Bife de Ancho',sub:'+/– 200g',desc:'',price:''},
-    {name:'Bisteca Suína',sub:'+/– 160g',desc:'',price:''},
-    {name:'Bife de Alcatra',sub:'+/– 100g',desc:'',price:''},
-    {name:'Contra Filé',sub:'+/– 200g',desc:'',price:''},
-    {name:'Peito de Frango',sub:'+/– 120g',desc:'',price:''},
-    {name:'Picanha',sub:'+/– 200g',desc:'',price:''},
-    {name:'Sobrecoxa em Cubos',sub:'+/– 200g',desc:'',price:''},
-    {name:'Vegetariano',sub:'2 ovos',desc:'',price:''},
+    {name:'Alcatra',sub:'+/– 150g',desc:'',price:'',dots:true},
+    {name:'Bife de Ancho',sub:'+/– 200g',desc:'',price:'',dots:true},
+    {name:'Bisteca Suína',sub:'+/– 160g',desc:'',price:'',dots:true},
+    {name:'Bife de Alcatra',sub:'+/– 100g',desc:'',price:'',dots:true},
+    {name:'Contra Filé',sub:'+/– 200g',desc:'',price:'',dots:true},
+    {name:'Peito de Frango',sub:'+/– 120g',desc:'',price:'',dots:true},
+    {name:'Picanha',sub:'+/– 200g',desc:'',price:'',dots:true},
+    {name:'Sobrecoxa em Cubos',sub:'+/– 200g',desc:'',price:'',dots:true},
+    {name:'Vegetariano',sub:'2 ovos',desc:'',price:'',dots:true},
   ];
   sections.almoco = almocoItems;
 
@@ -833,21 +926,135 @@ function initFromDOM() {
     'Brahma 600ml','Budweiser 600ml','Eisenbahn 600ml','Estrela Galicia 600ml',
     'Heineken 600ml','Original 600ml','Therezópolis 600ml',
     'Estrela Galicia 330ml','Heineken 330ml','Heineken S/Álcool 330ml'
-  ].map(n=>({name:n,sub:'',desc:'',price:''}));
+  ].map(n=>({name:n,sub:'',desc:'',price:'',dots:true}));
 
   sections.doses = [
     'Cachaça','Campari','Conhaque','Gin Doble W','Jack Daniels','Rum','Vodka','Whisky 8 Anos','Whisky 12 Anos'
-  ].map(n=>({name:n,sub:'',desc:'',price:''}));
+  ].map(n=>({name:n,sub:'',desc:'',price:'',dots:true}));
 
   sections.bebidas = [
     'Água sem gás','Água com gás','Energético Monster','Energético Red Bull',
     'Refrigerante Lata','Refrigerante KS','Maté Batido (sabores)',
     'Suco de Laranja Integral','Suco de Uva Integral','Suco Del Valle Sabores','Soda Italiana','Sprite Lemon'
-  ].map(n=>({name:n,sub:'',desc:'',price:''}));
+  ].map(n=>({name:n,sub:'',desc:'',price:'',dots:true}));
 
   sections.drinks = [
     'Cachaça','Vodka','Rum','Saquê','Gin Tônica','Cuba Libre','Jack and Coke','Negroni'
-  ].map(n=>({name:n,sub:'',desc:'',price:''}));
+  ].map(n=>({name:n,sub:'',desc:'',price:'',dots:true}));
+
+  customSections = [];
+  customLogo = null;
+}
+
+function initFromDOM() {
+  const restored = loadState();
+  if(!restored) defaultData();
+}
+
+// ============ PERSISTENCE (localStorage) ============
+const STORAGE_KEY = 'boteco-municipal-cardapio';
+
+function collectState() {
+  return {
+    sections, customSections, customLogo,
+    theme: document.body.className.match(/t-\w+/)?.[0] || 't-vintage',
+    font: document.body.className.match(/f-\w+/)?.[0] || '',
+    styleConfig,
+  };
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(collectState()));
+  } catch(e) { console.warn('Não foi possível salvar automaticamente:', e); }
+}
+
+function loadState() {
+  let raw;
+  try { raw = localStorage.getItem(STORAGE_KEY); } catch(e) { return false; }
+  if(!raw) return false;
+  try {
+    const data = JSON.parse(raw);
+    applyState(data);
+    return true;
+  } catch(e) { console.warn('Backup corrompido, usando padrão.', e); return false; }
+}
+
+function applyState(data) {
+  if(data.sections) Object.assign(sections, data.sections);
+  if(data.customSections) customSections = data.customSections;
+  if(data.customLogo) customLogo = data.customLogo;
+  if(data.styleConfig) Object.assign(styleConfig, data.styleConfig);
+  if(data.theme) {
+    document.body.className = document.body.className.replace(/t-\w+/,'').trim() + ' ' + data.theme;
+    document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('on'));
+    const themeName = data.theme.replace('t-','');
+    const btn = [...document.querySelectorAll('.tbtn')].find(b=>b.getAttribute('onclick')?.includes(`'${themeName}'`));
+    if(btn) btn.classList.add('on');
+  }
+  if(data.font !== undefined) {
+    document.body.className = document.body.className.replace(/f-\w+/,'').trim();
+    if(data.font) document.body.className += ' ' + data.font;
+    document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
+    const fontName = data.font.replace('f-','') || 'classic';
+    const btn = [...document.querySelectorAll('.fbtn')].find(b=>b.getAttribute('onclick')?.includes(`'${fontName}'`));
+    if(btn) btn.classList.add('on');
+  }
+}
+
+function exportBackup() {
+  const data = collectState();
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const stamp = new Date().toISOString().slice(0,10);
+  a.href = url;
+  a.download = `cardapio-boteco-municipal-${stamp}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function importBackup(file) {
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      applyState(data);
+      applyDynStyles();
+      applyLogo();
+      applyToMenu();
+      renderTabs();
+      renderTab(currentTab);
+      saveState();
+      showNotify('Backup restaurado!');
+    } catch(err) {
+      alert('Não foi possível ler esse arquivo de backup.');
+    }
+  };
+  reader.readAsText(file);
+  document.getElementById('importFile').value = '';
+}
+
+function applyLogo() {
+  if(!customLogo) return;
+  document.querySelectorAll('.logo-wrap img').forEach(img => { img.src = customLogo; });
+}
+
+function handleLogoUpload(input) {
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    customLogo = e.target.result;
+    applyLogo();
+    saveState();
+    showNotify('Logo atualizada!');
+  };
+  reader.readAsDataURL(file);
+  input.value = '';
 }
 
 // ============ THEME ============
@@ -856,6 +1063,7 @@ function setTheme(t, btn) {
   document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
   document.querySelectorAll('.stitle h2').forEach(el=>{el.style.background='var(--bg)'});
+  saveState();
 }
 
 // ============ FONT ============
@@ -864,6 +1072,21 @@ function setFont(f, btn) {
   if(f !== 'classic') document.body.className += ' f-' + f;
   document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
+  saveState();
+}
+
+// ============ CUSTOM ACCENT COLOR ============
+function setCustomColor(hex) {
+  styleConfig.customColor = hex;
+  applyDynStyles();
+  saveState();
+}
+
+function clearCustomColor() {
+  styleConfig.customColor = '';
+  applyDynStyles();
+  saveState();
+  renderStyleTab();
 }
 
 // ============ STYLE CONFIG ============
@@ -882,10 +1105,14 @@ const styleConfig = {
   logoSize:        72,
   pageMarginH:     12,
   pageMarginV:     14,
+  customColor:     '',
 };
 
 function applyDynStyles() {
   const s = styleConfig;
+  const colorOverride = s.customColor ? `
+    body{ --gold:${s.customColor} !important; --gold2:${s.customColor} !important; }
+  ` : '';
   document.getElementById('dynamic-styles').textContent = `
     .mn { font-size:${s.itemNameSize}pt !important; letter-spacing:${s.itemNameSpacing}px !important; font-weight:${s.itemNameWeight} !important; }
     .price-display { font-size:${s.priceSize}pt !important; }
@@ -897,6 +1124,7 @@ function applyDynStyles() {
     .mi { margin-bottom:${s.itemSpacing}mm !important; }
     .logo-wrap { width:${s.logoSize}px !important; height:${s.logoSize}px !important; }
     .page { padding:${s.pageMarginV}mm ${s.pageMarginH}mm !important; }
+    ${colorOverride}
   `;
 }
 
@@ -912,10 +1140,28 @@ function renderStyleTab() {
       </div>
       <input type="range" min="${min}" max="${max}" step="${step}" value="${s[key]}"
         style="width:100%;accent-color:#d4a843;cursor:pointer"
-        oninput="styleConfig['${key}']=parseFloat(this.value);document.getElementById('sv-${key}').textContent=this.value+'${unit}';applyDynStyles()">
+        oninput="styleConfig['${key}']=parseFloat(this.value);document.getElementById('sv-${key}').textContent=this.value+'${unit}';applyDynStyles();saveState()">
     </div>`;
 
   body.innerHTML = `
+    <div class="ep-section">
+      <div class="ep-section-title">Identidade Visual</div>
+      <div class="ep-color-row">
+        <input type="color" value="${s.customColor || '#d4a843'}" oninput="setCustomColor(this.value)">
+        <div style="flex:1">
+          <div class="ep-label" style="margin-bottom:2px">Cor de destaque (dourado)</div>
+          <div style="font-size:9px;color:rgba(212,168,67,0.5)">Substitui a cor do tema atual</div>
+        </div>
+      </div>
+      ${s.customColor ? `<button class="ep-add-btn" onclick="clearCustomColor()">↺ Usar cor padrão do tema</button>` : ''}
+      <div style="margin-top:12px">
+        <div class="ep-label" style="margin-bottom:6px">Logo do estabelecimento</div>
+        <label class="ep-file-btn">
+          ⬆ Enviar logo (PNG/JPG)
+          <input type="file" accept="image/*" style="display:none" onchange="handleLogoUpload(this)">
+        </label>
+      </div>
+    </div>
     <div class="ep-section">
       <div class="ep-section-title">Nomes dos Itens</div>
       ${row('Tamanho', 'itemNameSize', 5, 16, 0.5)}
@@ -952,51 +1198,112 @@ function renderStyleTab() {
 }
 
 function resetStyles() {
-  styleConfig.itemNameSize=8.5; styleConfig.itemNameSpacing=0.5; styleConfig.itemNameWeight=700;
-  styleConfig.priceSize=8; styleConfig.sectionSize=10.5; styleConfig.sectionSpacing=3;
-  styleConfig.descSize=6.5; styleConfig.subSize=6.5; styleConfig.taglineSize=7.5;
-  styleConfig.taxaSize=8; styleConfig.itemSpacing=1.8; styleConfig.logoSize=72;
-  styleConfig.pageMarginH=12; styleConfig.pageMarginV=14;
+  Object.assign(styleConfig, {
+    itemNameSize:8.5, itemNameSpacing:0.5, itemNameWeight:700,
+    priceSize:8.0, sectionSize:10.5, sectionSpacing:3,
+    descSize:6.5, subSize:6.5, taglineSize:7.5, taxaSize:8.0,
+    itemSpacing:1.8, logoSize:72, pageMarginH:12, pageMarginV:14,
+    customColor:'',
+  });
   applyDynStyles();
+  saveState();
   renderStyleTab();
 }
 
 // ============ PANEL ============
 let panelOpen = false;
 let currentTab = 0;
-const tabSections = ['almoco','sanduiche','porcoes','cervejas','doses','bebidas','drinks'];
+
+function getTabSections() {
+  return baseTabSections.concat(customSections.map(s=>s.id));
+}
 
 function toggleEditPanel() {
   panelOpen = !panelOpen;
   document.getElementById('edit-panel').classList.toggle('open', panelOpen);
   document.getElementById('pages').classList.toggle('panel-open', panelOpen);
   document.getElementById('toggleEdit').classList.toggle('active', panelOpen);
-  if(panelOpen) renderTab(currentTab);
+  if(panelOpen) { renderTabs(); renderTab(currentTab); }
+}
+
+function renderTabs() {
+  const tabs = getTabSections();
+  const wrap = document.getElementById('ep-tabs');
+  let html = '';
+  tabs.forEach((sec, i) => {
+    html += `<button class="ep-tab${i===currentTab?' on':''}" onclick="switchTab(${i},this)">${secLabel(sec)}</button>`;
+  });
+  html += `<button class="ep-tab" onclick="addCustomSection()" title="Criar nova categoria">+ Seção</button>`;
+  const styleIdx = tabs.length;
+  html += `<button class="ep-tab${currentTab===styleIdx?' on':''}" onclick="switchTab(${styleIdx},this)">✦ Estilos</button>`;
+  wrap.innerHTML = html;
 }
 
 function switchTab(idx, btn) {
   currentTab = idx;
   document.querySelectorAll('.ep-tab').forEach(t=>t.classList.remove('on'));
-  btn.classList.add('on');
-  if(idx === 7) { renderStyleTab(); return; }
+  if(btn) btn.classList.add('on');
+  const tabs = getTabSections();
+  if(idx === tabs.length) { renderStyleTab(); return; }
   renderTab(idx);
+}
+
+// ============ CUSTOM SECTIONS ============
+function addCustomSection() {
+  const title = prompt('Nome da nova categoria (ex: Sobremesas, Petiscos, Café):');
+  if(!title || !title.trim()) return;
+  const id = 'custom_' + Date.now();
+  customSections.push({id, title: title.trim(), items: [
+    {name:'Novo Item', desc:'', price:'', dots:true, esgotado:false, badges:[]}
+  ]});
+  renderTabs();
+  applyToMenu();
+  saveState();
+  const tabs = getTabSections();
+  switchTab(tabs.indexOf(id), null);
+  renderTabs();
+}
+
+function removeCustomSection(id) {
+  const sec = customSections.find(s=>s.id===id);
+  if(!sec) return;
+  if(!confirm(`Remover a categoria "${sec.title}" e todos os seus itens?`)) return;
+  customSections = customSections.filter(s=>s.id!==id);
+  currentTab = 0;
+  renderTabs();
+  applyToMenu();
+  saveState();
+  switchTab(0, document.querySelector('.ep-tab'));
+}
+
+function getSectionData(sec) {
+  const custom = customSections.find(s=>s.id===sec);
+  return custom ? custom.items : sections[sec];
 }
 
 // ============ RENDER EDITOR TAB ============
 function renderTab(idx) {
-  const sec = tabSections[idx];
-  const data = sections[sec];
+  const tabs = getTabSections();
+  const sec = tabs[idx];
+  if(!sec) return;
+  const isCustom = sec.startsWith('custom_');
+  const data = getSectionData(sec);
   const body = document.getElementById('ep-body');
 
   const hasSub = sec === 'almoco' || sec === 'porcoes';
-  const hasDesc = sec === 'sanduiche' || sec === 'porcoes';
 
   let html = `<div class="ep-section">
     <div class="ep-section-title">${secLabel(sec)}</div>`;
 
   data.forEach((item, i) => {
-    html += `<div class="ep-item" id="ep-item-${sec}-${i}">
+    const dotsOn = item.dots !== false;
+    const esgotadoOn = !!item.esgotado;
+    const badges = item.badges || [];
+    html += `<div class="ep-item" id="ep-item-${sec}-${i}" draggable="true"
+        ondragstart="onDragStart(event,'${sec}',${i})" ondragover="onDragOver(event)"
+        ondrop="onDrop(event,'${sec}',${i})" ondragend="onDragEnd(event)">
       <div class="ep-row">
+        <span class="ep-drag" title="Arrastar para reordenar">⠿</span>
         <div class="ep-field">
           <div class="ep-label">Nome</div>
           <input class="ep-input" id="ei-name-${sec}-${i}" value="${escHtml(item.name)}" placeholder="Nome do item">
@@ -1005,6 +1312,7 @@ function renderTab(idx) {
           <div class="ep-label">Preço</div>
           <input class="ep-input price-field" id="ei-price-${sec}-${i}" value="${escHtml(item.price)}" placeholder="R$ 0,00">
         </div>
+        <button class="ep-dup" onclick="duplicateItem('${sec}',${i})" title="Duplicar">⧉</button>
         <button class="ep-del" onclick="deleteItem('${sec}',${i})" title="Remover">✕</button>
       </div>`;
 
@@ -1017,16 +1325,13 @@ function renderTab(idx) {
       </div>`;
     }
 
-    if(hasDesc || item.desc) {
-      html += `<div class="ep-row">
+    html += `<div class="ep-row">
         <div class="ep-field">
           <div class="ep-label">Descrição</div>
           <input class="ep-input" id="ei-desc-${sec}-${i}" value="${escHtml(item.desc)}" placeholder="Ingredientes, observações...">
         </div>
       </div>`;
-    }
 
-    const dotsOn = item.dots !== false;
     html += `<div class="ep-row" style="gap:6px">
       <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-family:'Libre Baskerville',serif;font-size:10px;color:rgba(212,168,67,0.75)">
         <input type="checkbox" id="ei-dots-${sec}-${i}" ${dotsOn ? 'checked' : ''} style="accent-color:#d4a843;width:13px;height:13px;cursor:pointer">
@@ -1034,69 +1339,149 @@ function renderTab(idx) {
       </label>
     </div>`;
 
+    html += `<div class="ep-row" style="gap:6px">
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-family:'Libre Baskerville',serif;font-size:10px;color:rgba(212,168,67,0.75)">
+        <input type="checkbox" id="ei-esgotado-${sec}-${i}" ${esgotadoOn ? 'checked' : ''} style="accent-color:#d4a843;width:13px;height:13px;cursor:pointer">
+        Esgotado
+      </label>
+    </div>`;
+
+    html += `<div class="ep-row">
+      <div class="ep-field">
+        <div class="ep-label">Etiquetas</div>
+        <div class="ep-badges-row">
+          ${BADGE_OPTS.map(b => `
+            <label class="ep-badge-opt">
+              <input type="checkbox" id="ei-badge-${b.key}-${sec}-${i}" ${badges.includes(b.key)?'checked':''}>
+              ${b.icon} ${b.label}
+            </label>`).join('')}
+        </div>
+      </div>
+    </div>`;
+
     html += `</div>`;
   });
 
   html += `<button class="ep-add-btn" onclick="addItem('${sec}')">+ Adicionar item em ${secLabel(sec)}</button>`;
+  if(isCustom) {
+    html += `<button class="ep-rmsec-btn" onclick="removeCustomSection('${sec}')">🗑 Remover categoria "${secLabel(sec)}"</button>`;
+  }
   html += `</div>`;
 
   body.innerHTML = html;
 }
 
+// ============ DRAG REORDER ============
+let dragSec = null, dragIdx = null;
+function onDragStart(ev, sec, idx) {
+  dragSec = sec; dragIdx = idx;
+  ev.currentTarget.classList.add('dragging');
+}
+function onDragOver(ev) {
+  ev.preventDefault();
+  ev.currentTarget.classList.add('drag-over');
+}
+function onDragEnd(ev) {
+  document.querySelectorAll('.ep-item').forEach(el=>el.classList.remove('dragging','drag-over'));
+}
+function onDrop(ev, sec, idx) {
+  ev.preventDefault();
+  document.querySelectorAll('.ep-item').forEach(el=>el.classList.remove('drag-over'));
+  if(dragSec !== sec || dragIdx === null || dragIdx === idx) return;
+  applyAll(); // preserve any unsaved edits before reordering
+  const data = getSectionData(sec);
+  const [moved] = data.splice(dragIdx, 1);
+  data.splice(idx, 0, moved);
+  dragSec = null; dragIdx = null;
+  renderTab(currentTab);
+  applyToMenu();
+  saveState();
+}
+
 function secLabel(sec) {
   const labels = {almoco:'Almoço',sanduiche:'Sanduíches',porcoes:'Porções',cervejas:'Cervejas',doses:'Doses',bebidas:'Bebidas',drinks:'Drinks'};
-  return labels[sec] || sec;
+  if(labels[sec]) return labels[sec];
+  const custom = customSections.find(s=>s.id===sec);
+  return custom ? custom.title : sec;
 }
 
 function escHtml(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-// ============ ADD / DELETE ============
+// ============ ADD / DELETE / DUPLICATE ============
 function addItem(sec) {
-  sections[sec].push({name:'Novo Item',sub:'',desc:'',price:'',dots:true});
+  getSectionData(sec).push({name:'Novo Item',sub:'',desc:'',price:'',dots:true,esgotado:false,badges:[]});
   renderTab(currentTab);
-  // Scroll to last item
   setTimeout(()=>{
     const body = document.getElementById('ep-body');
     body.scrollTop = body.scrollHeight;
   },50);
 }
 
+function duplicateItem(sec, idx) {
+  applyAll();
+  const data = getSectionData(sec);
+  const copy = JSON.parse(JSON.stringify(data[idx]));
+  data.splice(idx+1, 0, copy);
+  renderTab(currentTab);
+  applyToMenu();
+  saveState();
+}
+
 function deleteItem(sec, idx) {
-  if(sections[sec].length <= 1) return;
-  sections[sec].splice(idx,1);
+  const data = getSectionData(sec);
+  if(data.length <= 1) return;
+  data.splice(idx,1);
   renderTab(currentTab);
 }
 
 // ============ APPLY ============
 function applyAll() {
-  // Collect from all tabs by reading inputs that exist
-  tabSections.forEach(sec => {
-    sections[sec].forEach((item, i) => {
+  const tabs = getTabSections();
+  tabs.forEach(sec => {
+    getSectionData(sec).forEach((item, i) => {
       const nameEl = document.getElementById(`ei-name-${sec}-${i}`);
       const priceEl = document.getElementById(`ei-price-${sec}-${i}`);
       const subEl = document.getElementById(`ei-sub-${sec}-${i}`);
       const descEl = document.getElementById(`ei-desc-${sec}-${i}`);
       const dotsEl = document.getElementById(`ei-dots-${sec}-${i}`);
+      const esgotadoEl = document.getElementById(`ei-esgotado-${sec}-${i}`);
       if(nameEl) item.name = nameEl.value;
       if(priceEl) item.price = priceEl.value;
       if(subEl) item.sub = subEl.value;
       if(descEl) item.desc = descEl.value;
       if(dotsEl) item.dots = dotsEl.checked;
+      if(esgotadoEl) item.esgotado = esgotadoEl.checked;
+      const badges = [];
+      BADGE_OPTS.forEach(b => {
+        const el = document.getElementById(`ei-badge-${b.key}-${sec}-${i}`);
+        if(el && el.checked) badges.push(b.key);
+      });
+      item.badges = badges;
     });
   });
 
   applyToMenu();
+  saveState();
   showNotify();
+}
+
+function badgesHtml(item) {
+  const badges = item.badges || [];
+  if(!badges.length) return '';
+  return `<span class="badges">${badges.map(k => {
+    const b = BADGE_OPTS.find(x=>x.key===k);
+    return b ? `<span class="badge-tag" title="${b.label}">${b.icon}</span>` : '';
+  }).join('')}</span>`;
 }
 
 function applyToMenu() {
   // ALMOÇO
   rebuildList('almoco-list', sections.almoco, 'almoco', (item,i) => `
-    <div class="mi" data-section="almoco" data-idx="${i}">
+    <div class="mi${item.esgotado?' esgotado':''}" data-section="almoco" data-idx="${i}">
       <div class="mi-top">
-        <div class="mn">${item.name}</div>
+        <div class="mn">${item.name}${badgesHtml(item)}</div>
         ${item.sub ? `<div class="mw">${item.sub}</div>` : ''}
       </div>
       ${priceBlock(item)}
@@ -1108,9 +1493,9 @@ function applyToMenu() {
 
   // SANDUÍCHES
   rebuildList('sanduiche-list', sections.sanduiche, 'sanduiche', (item,i) => `
-    <div class="mi" style="align-items:flex-start;margin-bottom:3mm" data-section="sanduiche" data-idx="${i}">
+    <div class="mi${item.esgotado?' esgotado':''}" style="align-items:flex-start;margin-bottom:3mm" data-section="sanduiche" data-idx="${i}">
       <div class="mi-top">
-        <div class="mn">${item.name}</div>
+        <div class="mn">${item.name}${badgesHtml(item)}</div>
         ${item.desc ? `<div class="md">${item.desc}</div>` : ''}
       </div>
       ${priceBlock(item, 'margin-top:2px')}
@@ -1120,9 +1505,9 @@ function applyToMenu() {
   rebuildList('porcoes-list', sections.porcoes, 'porcoes', (item,i) => {
     const looksDescOnly = item.desc && !item.sub;
     return `
-      <div class="mi" style="${looksDescOnly ? 'align-items:flex-start;margin-bottom:2mm' : ''}" data-section="porcoes" data-idx="${i}">
+      <div class="mi${item.esgotado?' esgotado':''}" style="${looksDescOnly ? 'align-items:flex-start;margin-bottom:2mm' : ''}" data-section="porcoes" data-idx="${i}">
         <div class="mi-top">
-          <div class="mn">${item.name}</div>
+          <div class="mn">${item.name}${badgesHtml(item)}</div>
           ${item.sub ? `<div class="mw">${item.sub}</div>` : ''}
           ${item.desc ? `<div class="md">${item.desc}</div>` : ''}
         </div>
@@ -1138,10 +1523,39 @@ function applyToMenu() {
   rebuildListSm('bebidas-list', sections.bebidas, 'bebidas');
   // DRINKS
   rebuildListSm('drinks-list', sections.drinks, 'drinks');
+
+  // CUSTOM SECTIONS (extra page)
+  renderExtraPage();
+}
+
+function renderExtraPage() {
+  const page = document.getElementById('extra-page');
+  const container = document.getElementById('extra-sections-container');
+  if(!customSections.length) {
+    page.style.display = 'none';
+    container.innerHTML = '';
+    return;
+  }
+  page.style.display = '';
+  container.innerHTML = customSections.map(sec => `
+    <div class="custom-box">
+      <div class="stitle" style="margin:0 0 3mm"><h2>${escHtml(sec.title)}</h2></div>
+      ${sec.items.map((item,i) => `
+        <div class="mi${item.esgotado?' esgotado':''}" style="${item.desc?'align-items:flex-start;margin-bottom:2mm':''}" data-section="${sec.id}" data-idx="${i}">
+          <div class="mi-top">
+            <div class="mn">${item.name}${badgesHtml(item)}</div>
+            ${item.desc ? `<div class="md">${item.desc}</div>` : ''}
+          </div>
+          ${priceBlock(item, item.desc ? 'margin-top:2px' : '')}
+        </div>`).join('')}
+    </div>`).join('');
 }
 
 function priceBlock(item, extraStyle) {
   const style = extraStyle ? ` style="${extraStyle}"` : '';
+  if(item.esgotado) {
+    return `<span class="esgotado-label"${style}>Esgotado</span>`;
+  }
   if(item.dots === false) {
     return `<span class="price-display"${style}>${fmtPrice(item.price)}</span>`;
   }
@@ -1158,8 +1572,8 @@ function rebuildListSm(listId, items, sec) {
   const el = document.getElementById(listId);
   if(!el) return;
   el.innerHTML = items.map((item,i) => `
-    <div class="mi sm" data-section="${sec}" data-idx="${i}">
-      <div class="mi-top"><div class="mn" style="font-size:7.5pt">${item.name}</div></div>
+    <div class="mi sm${item.esgotado?' esgotado':''}" data-section="${sec}" data-idx="${i}">
+      <div class="mi-top"><div class="mn" style="font-size:7.5pt">${item.name}${badgesHtml(item)}</div></div>
       ${priceBlock(item)}
     </div>`).join('');
 }
@@ -1187,8 +1601,9 @@ function fmtPrice(p) {
 }
 
 // ============ NOTIFY ============
-function showNotify() {
+function showNotify(msg) {
   const n = document.getElementById('notify');
+  n.textContent = msg || '✦ Cardápio atualizado ✦';
   n.classList.add('show');
   setTimeout(()=>n.classList.remove('show'), 2500);
 }
@@ -1196,6 +1611,9 @@ function showNotify() {
 // ============ INIT ============
 initFromDOM();
 applyDynStyles();
+applyLogo();
+applyToMenu();
 </script>
+
 </body>
 </html>
