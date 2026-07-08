@@ -412,13 +412,23 @@ body.t-kraft .logo-wrap img { mix-blend-mode:normal; filter:none; }
 .chopp-d{font-family:var(--f-accent);font-style:italic;font-size:7.5pt;color:var(--gold);margin-top:1mm}
 
 /* PRINT */
+@page{
+  size:A4;
+  margin:0;
+}
 @media print{
   *{ -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
   #ui-bar,#edit-panel,#notify{ display:none !important; }
   html,body{ margin:0 !important; padding:0 !important; background:transparent !important; }
   .pages{ margin:0 !important; padding:0 !important; }
-  .page{ margin:0 !important; box-shadow:none !important; page-break-after:always; width:210mm !important; min-height:297mm !important; }
-  .page:last-child{ page-break-after:avoid; }
+  .page{
+    margin:0 !important; box-shadow:none !important;
+    page-break-after:always; break-after:page;
+    width:210mm !important; height:297mm !important; min-height:297mm !important;
+    max-height:297mm !important; overflow:hidden !important;
+  }
+  .page:last-child{ page-break-after:avoid; break-after:auto; }
+  .mi, .si, .stitle, .hdr, .chopp, .sbox, .taxa-inner{ break-inside:avoid; page-break-inside:avoid; }
 }
 
 /* NOTIFICATION */
@@ -800,23 +810,23 @@ function initFromDOM() {
   ];
 
   sections.sanduiche = [
-    {name:'Pão com Bolinho',sub:'',desc:'Blend de carnes, temperos, ervas e especiarias. Maionese com alho e bacon, creme de queijo cheddar e cebolinha. Pão francês, acompanha batata frita',price:''},
-    {name:'Pork',sub:'',desc:'Lombo de porco, mel, barbecue, especiarias, rúcula e queijo mussarela',price:''},
-    {name:'Pão com Bifé de Alcatra',sub:'',desc:'Bife e maionese · +R$3 queijo · +R$3 ovo',price:''},
-    {name:'Pão com Linguiça',sub:'',desc:'Calabresa na chapa com cebola e ervas frescas · +R$3 queijo · +R$3 ovo',price:''},
-    {name:'Sanduíche de Panceta',sub:'',desc:'Panceta marinada na cachaça e chopp, especiarias, salsinha, cebolinha e coentro, molho mostarda e mel. Pão francês',price:''},
+    {name:'Pão com Bolinho',sub:'',desc:'Blend de carnes, temperos, ervas e especiarias. Maionese com alho e bacon, creme de queijo cheddar e cebolinha. Pão francês, acompanha batata frita',price:'',dots:false},
+    {name:'Pork',sub:'',desc:'Lombo de porco, mel, barbecue, especiarias, rúcula e queijo mussarela',price:'',dots:false},
+    {name:'Pão com Bifé de Alcatra',sub:'',desc:'Bife e maionese · +R$3 queijo · +R$3 ovo',price:'',dots:false},
+    {name:'Pão com Linguiça',sub:'',desc:'Calabresa na chapa com cebola e ervas frescas · +R$3 queijo · +R$3 ovo',price:'',dots:false},
+    {name:'Sanduíche de Panceta',sub:'',desc:'Panceta marinada na cachaça e chopp, especiarias, salsinha, cebolinha e coentro, molho mostarda e mel. Pão francês',price:'',dots:false},
   ];
 
   sections.porcoes = [
-    {name:'Batata Frita',sub:'Porção 400g',desc:'',price:''},
-    {name:'Batata Frita',sub:'Meia porção 200g',desc:'',price:''},
-    {name:'Batata Cheddar e Bacon',sub:'Porção 400g',desc:'',price:''},
-    {name:'Batata Cheddar e Bacon',sub:'Meia porção 200g',desc:'',price:''},
-    {name:'Bolinho Abóbora c/ Costela',sub:'',desc:'Costela desfiada, massa de abóbora cabotiá assada com azeite · 6 un',price:''},
-    {name:'Calabresa Acebolada 200g',sub:'',desc:'Acompanha farofa e pão fatiado',price:''},
-    {name:'Croquete de Bacalhau',sub:'',desc:'Acompanha pimenta caseira · 6 un',price:''},
-    {name:'Mini Coxinha Frango',sub:'',desc:'Servida com molho barbecue · 10 un',price:''},
-    {name:'Torresmo Municipal',sub:'',desc:'Marinado na cachaça, assado com ervas, mel e laranja. Pimenta da casa · 250g',price:''},
+    {name:'Batata Frita',sub:'Porção 400g',desc:'',price:'',dots:true},
+    {name:'Batata Frita',sub:'Meia porção 200g',desc:'',price:'',dots:true},
+    {name:'Batata Cheddar e Bacon',sub:'Porção 400g',desc:'',price:'',dots:true},
+    {name:'Batata Cheddar e Bacon',sub:'Meia porção 200g',desc:'',price:'',dots:true},
+    {name:'Bolinho Abóbora c/ Costela',sub:'',desc:'Costela desfiada, massa de abóbora cabotiá assada com azeite · 6 un',price:'',dots:false},
+    {name:'Calabresa Acebolada 200g',sub:'',desc:'Acompanha farofa e pão fatiado',price:'',dots:false},
+    {name:'Croquete de Bacalhau',sub:'',desc:'Acompanha pimenta caseira · 6 un',price:'',dots:false},
+    {name:'Mini Coxinha Frango',sub:'',desc:'Servida com molho barbecue · 10 un',price:'',dots:false},
+    {name:'Torresmo Municipal',sub:'',desc:'Marinado na cachaça, assado com ervas, mel e laranja. Pimenta da casa · 250g',price:'',dots:false},
   ];
 
   sections.cervejas = [
@@ -1016,6 +1026,14 @@ function renderTab(idx) {
       </div>`;
     }
 
+    const dotsOn = item.dots !== false;
+    html += `<div class="ep-row" style="gap:6px">
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-family:'Libre Baskerville',serif;font-size:10px;color:rgba(212,168,67,0.75)">
+        <input type="checkbox" id="ei-dots-${sec}-${i}" ${dotsOn ? 'checked' : ''} style="accent-color:#d4a843;width:13px;height:13px;cursor:pointer">
+        Linha pontilhada até o preço
+      </label>
+    </div>`;
+
     html += `</div>`;
   });
 
@@ -1036,7 +1054,7 @@ function escHtml(s) {
 
 // ============ ADD / DELETE ============
 function addItem(sec) {
-  sections[sec].push({name:'Novo Item',sub:'',desc:'',price:''});
+  sections[sec].push({name:'Novo Item',sub:'',desc:'',price:'',dots:true});
   renderTab(currentTab);
   // Scroll to last item
   setTimeout(()=>{
@@ -1060,10 +1078,12 @@ function applyAll() {
       const priceEl = document.getElementById(`ei-price-${sec}-${i}`);
       const subEl = document.getElementById(`ei-sub-${sec}-${i}`);
       const descEl = document.getElementById(`ei-desc-${sec}-${i}`);
+      const dotsEl = document.getElementById(`ei-dots-${sec}-${i}`);
       if(nameEl) item.name = nameEl.value;
       if(priceEl) item.price = priceEl.value;
       if(subEl) item.sub = subEl.value;
       if(descEl) item.desc = descEl.value;
+      if(dotsEl) item.dots = dotsEl.checked;
     });
   });
 
@@ -1079,7 +1099,7 @@ function applyToMenu() {
         <div class="mn">${item.name}</div>
         ${item.sub ? `<div class="mw">${item.sub}</div>` : ''}
       </div>
-      <div class="pline"><span class="dots"></span><span class="price-display">${fmtPrice(item.price)}</span></div>
+      ${priceBlock(item)}
     </div>`);
 
   // PARMEGIANA & FEIJOADA (fixed structure, just update prices)
@@ -1093,25 +1113,20 @@ function applyToMenu() {
         <div class="mn">${item.name}</div>
         ${item.desc ? `<div class="md">${item.desc}</div>` : ''}
       </div>
-      <span class="price-display" style="margin-top:2px">${fmtPrice(item.price)}</span>
+      ${priceBlock(item, 'margin-top:2px')}
     </div>`);
 
   // PORÇÕES
   rebuildList('porcoes-list', sections.porcoes, 'porcoes', (item,i) => {
-    const hasDesc = item.desc && !item.sub;
-    if(hasDesc) return `
-      <div class="mi" style="align-items:flex-start;margin-bottom:2mm" data-section="porcoes" data-idx="${i}">
-        <div class="mi-top"><div class="mn">${item.name}</div><div class="md">${item.desc}</div></div>
-        <span class="price-display" style="margin-top:2px">${fmtPrice(item.price)}</span>
-      </div>`;
+    const looksDescOnly = item.desc && !item.sub;
     return `
-      <div class="mi" data-section="porcoes" data-idx="${i}">
+      <div class="mi" style="${looksDescOnly ? 'align-items:flex-start;margin-bottom:2mm' : ''}" data-section="porcoes" data-idx="${i}">
         <div class="mi-top">
           <div class="mn">${item.name}</div>
           ${item.sub ? `<div class="mw">${item.sub}</div>` : ''}
           ${item.desc ? `<div class="md">${item.desc}</div>` : ''}
         </div>
-        <div class="pline"><span class="dots"></span><span class="price-display">${fmtPrice(item.price)}</span></div>
+        ${priceBlock(item, looksDescOnly ? 'margin-top:2px' : '')}
       </div>`;
   });
 
@@ -1123,6 +1138,14 @@ function applyToMenu() {
   rebuildListSm('bebidas-list', sections.bebidas, 'bebidas');
   // DRINKS
   rebuildListSm('drinks-list', sections.drinks, 'drinks');
+}
+
+function priceBlock(item, extraStyle) {
+  const style = extraStyle ? ` style="${extraStyle}"` : '';
+  if(item.dots === false) {
+    return `<span class="price-display"${style}>${fmtPrice(item.price)}</span>`;
+  }
+  return `<div class="pline"${style}><span class="dots"></span><span class="price-display">${fmtPrice(item.price)}</span></div>`;
 }
 
 function rebuildList(listId, items, sec, tplFn) {
@@ -1137,7 +1160,7 @@ function rebuildListSm(listId, items, sec) {
   el.innerHTML = items.map((item,i) => `
     <div class="mi sm" data-section="${sec}" data-idx="${i}">
       <div class="mi-top"><div class="mn" style="font-size:7.5pt">${item.name}</div></div>
-      <div class="pline"><span class="dots"></span><span class="price-display">${fmtPrice(item.price)}</span></div>
+      ${priceBlock(item)}
     </div>`).join('');
 }
 
