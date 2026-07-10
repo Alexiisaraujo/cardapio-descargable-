@@ -1221,21 +1221,32 @@ function applyDynStyles() {
   applySectionStyles();
 }
 
-// ============ PER-SECTION SCALE OVERRIDE ============
+// ============ PER-SECTION FULL STYLE OVERRIDE ============
+const SECTION_STYLE_KEYS = ['itemNameSize','itemNameSpacing','itemNameWeight','priceSize','sectionSize','sectionSpacing','descSize','subSize','itemSpacing'];
+
+function ensureSectionOverride(sec) {
+  if(!sectionStyleOverrides[sec]) {
+    const ov = {};
+    SECTION_STYLE_KEYS.forEach(k => ov[k] = styleConfig[k]);
+    sectionStyleOverrides[sec] = ov;
+  }
+  return sectionStyleOverrides[sec];
+}
+
 function applySectionStyles() {
-  const s = styleConfig;
   let css = '';
   Object.keys(sectionStyleOverrides).forEach(sec => {
     const ov = sectionStyleOverrides[sec];
-    if(!ov || !ov.scale || ov.scale === 1) return;
-    const scale = ov.scale;
-    const sel = `.mi[data-section="${sec}"]`;
+    if(!ov) return;
+    const itemSel = `.mi[data-section="${sec}"]`;
+    const titleSel = `#stitle-${sec} h2`;
     css += `
-      ${sel} .mn { font-size:${(s.itemNameSize*scale).toFixed(2)}pt !important; }
-      ${sel} .md { font-size:${(s.descSize*scale).toFixed(2)}pt !important; }
-      ${sel} .mw { font-size:${(s.subSize*scale).toFixed(2)}pt !important; }
-      ${sel} .price-display { font-size:${(s.priceSize*scale).toFixed(2)}pt !important; }
-      ${sel} { margin-bottom:${(s.itemSpacing*scale).toFixed(2)}mm !important; }
+      ${itemSel} .mn { font-size:${ov.itemNameSize}pt !important; letter-spacing:${ov.itemNameSpacing}px !important; font-weight:${ov.itemNameWeight} !important; }
+      ${itemSel} .price-display { font-size:${ov.priceSize}pt !important; }
+      ${itemSel} .md { font-size:${ov.descSize}pt !important; }
+      ${itemSel} .mw { font-size:${ov.subSize}pt !important; }
+      ${itemSel} { margin-bottom:${ov.itemSpacing}mm !important; }
+      ${titleSel} { font-size:${ov.sectionSize}pt !important; letter-spacing:${ov.sectionSpacing}px !important; }
     `;
   });
   const el = document.getElementById('section-dyn-styles');
@@ -1277,95 +1288,6 @@ function updateQRBlock() {
   el.innerHTML = `<img src="${qrImgUrl}" alt="QR Code" loading="lazy"><div class="qr-caption">${escHtml(s.qrCaption)}</div>`;
 }
 
-function renderItemOverridePanel() {
-  const tabs = getTabSections();
-  if(!tabs.includes(ovSec)) ovSec = tabs[0];
-  const data = getSectionData(ovSec);
-  if(ovIdx >= data.length) ovIdx = 0;
-
-  const secOptions = tabs.map(s => `<option value="${s}" ${s===ovSec?'selected':''}>${secLabel(s)}</option>`).join('');
-
-  const modeRow = `
-    <div class="ep-choice-row" style="margin-top:10px">
-      <button class="ep-choice-btn${ovMode==='section'?' on':''}" onclick="ovMode='section';renderStyleTab()">Toda a seção</button>
-      <button class="ep-choice-btn${ovMode==='item'?' on':''}" onclick="ovMode='item';renderStyleTab()">Um prato específico</button>
-    </div>`;
-
-  const secSelect = `
-    <div class="ep-field" style="margin-top:10px">
-      <div class="ep-label">Seção</div>
-      <select class="ep-input" onchange="ovSec=this.value;ovIdx=0;renderStyleTab()">${secOptions}</select>
-    </div>`;
-
-  if(ovMode === 'item') {
-    if(!data.length) return secSelect + modeRow + `<div style="padding:10px 0;font-size:10px;color:rgba(212,168,67,0.6)">Essa seção não tem itens ainda.</div>`;
-    const item = data[ovIdx];
-    const itemOptions = data.map((it,i) => `<option value="${i}" ${i===ovIdx?'selected':''}>${escHtml(it.name)}</option>`).join('');
-    const nameSize = item.nameSize || styleConfig.itemNameSize;
-    const priceSize = item.priceSize || styleConfig.priceSize;
-    return secSelect + modeRow + `
-      <div class="ep-field" style="margin-top:8px">
-        <div class="ep-label">Prato / Item</div>
-        <select class="ep-input" onchange="ovIdx=parseInt(this.value);renderStyleTab()">${itemOptions}</select>
-      </div>
-      ${sizeSliders(nameSize, priceSize)}
-      <button class="ep-add-btn" onclick="clearItemOverride()">↺ Restaurar tamanho padrão deste prato</button>`;
-  }
-
-  // section-wide mode
-  const scalePct = Math.round(((sectionStyleOverrides[ovSec] && sectionStyleOverrides[ovSec].scale) || 1) * 100);
-  return secSelect + modeRow + `
-      <div style="font-size:9px;color:rgba(212,168,67,0.5);margin:6px 0">Escala tudo junto — nome, descrição, gramagem, preço e espaço entre pratos — só nesta seção. Ideal quando sobra espaço em branco na página.</div>
-      <div class="ep-item" style="padding:12px;margin-top:6px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-          <div class="ep-label" style="font-size:10px;color:#d4a843">Escala geral desta seção</div>
-          <span id="ov-sv-scale" style="font-family:'Playfair Display',serif;color:#e8dcc8;font-size:12px">${scalePct}%</span>
-        </div>
-        <input type="range" min="80" max="200" step="5" value="${scalePct}"
-          style="width:100%;accent-color:#d4a843;cursor:pointer"
-          oninput="applySectionScale(parseInt(this.value));document.getElementById('ov-sv-scale').textContent=this.value+'%'">
-      </div>
-      <button class="ep-add-btn" onclick="clearSectionScale()">↺ Restaurar escala padrão desta seção</button>`;
-}
-
-function sizeSliders(nameSize, priceSize) {
-  return `
-      <div class="ep-item" style="padding:12px;margin-top:10px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-          <div class="ep-label" style="font-size:10px;color:#d4a843">Tamanho do nome</div>
-          <span id="ov-sv-name" style="font-family:'Playfair Display',serif;color:#e8dcc8;font-size:12px">${nameSize}pt</span>
-        </div>
-        <input type="range" min="5" max="20" step="0.5" value="${nameSize}"
-          style="width:100%;accent-color:#d4a843;cursor:pointer"
-          oninput="applyItemOverride('name',parseFloat(this.value));document.getElementById('ov-sv-name').textContent=this.value+'pt'">
-      </div>
-
-      <div class="ep-item" style="padding:12px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-          <div class="ep-label" style="font-size:10px;color:#d4a843">Tamanho do preço</div>
-          <span id="ov-sv-price" style="font-family:'Playfair Display',serif;color:#e8dcc8;font-size:12px">${priceSize}pt</span>
-        </div>
-        <input type="range" min="5" max="20" step="0.5" value="${priceSize}"
-          style="width:100%;accent-color:#d4a843;cursor:pointer"
-          oninput="applyItemOverride('price',parseFloat(this.value));document.getElementById('ov-sv-price').textContent=this.value+'pt'">
-      </div>`;
-}
-
-function applySectionScale(pct) {
-  if(!ovSec) return;
-  sectionStyleOverrides[ovSec] = { scale: pct / 100 };
-  applySectionStyles();
-  saveState();
-}
-
-function clearSectionScale() {
-  if(!ovSec) return;
-  delete sectionStyleOverrides[ovSec];
-  applySectionStyles();
-  saveState();
-  renderStyleTab();
-}
-
 function applyItemOverride(kind, value) {
   const data = getSectionData(ovSec);
   const item = data[ovIdx];
@@ -1387,19 +1309,30 @@ function clearItemOverride() {
   renderStyleTab();
 }
 
+function clearSectionOverride() {
+  if(!ovSec) return;
+  delete sectionStyleOverrides[ovSec];
+  applySectionStyles();
+  saveState();
+  renderStyleTab();
+}
+
 function renderStyleTab() {
   const body = document.getElementById('ep-body');
   const s = styleConfig;
+  const scoped = ovSec !== null;               // true = editing one section
+  const target = scoped ? ensureSectionOverride(ovSec) : s;
+  const onChangeFn = scoped ? 'applySectionStyles' : 'applyDynStyles';
 
   const row = (label, key, min, max, step, unit='pt') => `
     <div class="ep-item" style="padding:12px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
         <div class="ep-label" style="font-size:10px;color:#d4a843">${label}</div>
-        <span id="sv-${key}" style="font-family:'Playfair Display',serif;color:#e8dcc8;font-size:12px;min-width:40px;text-align:right">${s[key]}${unit}</span>
+        <span id="sv-${key}" style="font-family:'Playfair Display',serif;color:#e8dcc8;font-size:12px;min-width:40px;text-align:right">${target[key]}${unit}</span>
       </div>
-      <input type="range" min="${min}" max="${max}" step="${step}" value="${s[key]}"
+      <input type="range" min="${min}" max="${max}" step="${step}" value="${target[key]}"
         style="width:100%;accent-color:#d4a843;cursor:pointer"
-        oninput="styleConfig['${key}']=parseFloat(this.value);document.getElementById('sv-${key}').textContent=this.value+'${unit}';applyDynStyles();saveState()">
+        oninput="(${scoped}?ensureSectionOverride(ovSec):styleConfig)['${key}']=parseFloat(this.value);document.getElementById('sv-${key}').textContent=this.value+'${unit}';${onChangeFn}();saveState()">
     </div>`;
 
   const choice = (options, key, onChangeExtra='') => `
@@ -1407,18 +1340,57 @@ function renderStyleTab() {
       ${options.map(o => `<button class="ep-choice-btn${s[key]===o.value?' on':''}" onclick="styleConfig['${key}']='${o.value}';applyDynStyles();saveState();${onChangeExtra}renderStyleTab()">${o.label}</button>`).join('')}
     </div>`;
 
-  body.innerHTML = `
+  const tabs = getTabSections();
+  const secOptions = `<option value="">— Todas as páginas —</option>` +
+    tabs.map(t => `<option value="${t}" ${t===ovSec?'selected':''}>${secLabel(t)}</option>`).join('');
+
+  const scopePicker = `
     <div class="ep-section">
-      <div class="ep-section-title">Escopo do Ajuste</div>
-      <div class="ep-choice-row">
-        <button class="ep-choice-btn${ovSec===null?' on':''}" onclick="ovSec=null;renderStyleTab()">Todas as páginas</button>
-        <button class="ep-choice-btn${ovSec!==null?' on':''}" onclick="ovSec=ovSec||getTabSections()[0];ovMode='section';renderStyleTab()">Página específica</button>
-      </div>
+      <div class="ep-section-title">Aplicar ajustes em</div>
+      <select class="ep-input" onchange="ovSec=this.value||null;ovMode='section';renderStyleTab()">${secOptions}</select>
       <div style="font-size:9px;color:rgba(212,168,67,0.5);margin-top:6px">
-        ${ovSec===null ? 'Os controles abaixo (tamanhos, cores etc.) valem para o cardápio inteiro.' : 'Por padrão ajusta a seção inteira — dá pra afinar um prato específico logo abaixo, se precisar.'}
+        ${scoped
+          ? `Todos os controles abaixo valem só para "${secLabel(ovSec)}" — o resto do cardápio fica como está.`
+          : 'Padrão: os controles abaixo valem para o cardápio inteiro. Selecione uma seção acima para editar só ela.'}
       </div>
-      ${ovSec !== null ? renderItemOverridePanel() : ''}
-    </div>
+      ${scoped ? `
+        <div class="ep-choice-row" style="margin-top:10px">
+          <button class="ep-choice-btn${ovMode==='section'?' on':''}" onclick="ovMode='section';renderStyleTab()">Seção inteira</button>
+          <button class="ep-choice-btn${ovMode==='item'?' on':''}" onclick="ovMode='item';renderStyleTab()">Um prato específico</button>
+        </div>
+        <button class="ep-add-btn" style="margin-top:8px" onclick="clearSectionOverride()">↺ Restaurar padrão desta seção</button>
+      ` : ''}
+    </div>`;
+
+  // "um prato específico" — reuses the simpler name/price-only sliders
+  if(scoped && ovMode === 'item') {
+    const data = getSectionData(ovSec);
+    if(!data.length) {
+      body.innerHTML = scopePicker + `<div class="ep-section"><div style="padding:10px 0;font-size:10px;color:rgba(212,168,67,0.6)">Essa seção não tem itens ainda.</div></div>`;
+      return;
+    }
+    if(ovIdx >= data.length) ovIdx = 0;
+    const item = data[ovIdx];
+    const itemOptions = data.map((it,i) => `<option value="${i}" ${i===ovIdx?'selected':''}>${escHtml(it.name)}</option>`).join('');
+    const nameSize = item.nameSize || styleConfig.itemNameSize;
+    const priceSize = item.priceSize || styleConfig.priceSize;
+    body.innerHTML = scopePicker + `
+      <div class="ep-section">
+        <div class="ep-field">
+          <div class="ep-label">Prato / Item</div>
+          <select class="ep-input" onchange="ovIdx=parseInt(this.value);renderStyleTab()">${itemOptions}</select>
+        </div>
+        ${sizeSliders(nameSize, priceSize)}
+        <button class="ep-add-btn" onclick="clearItemOverride()">↺ Restaurar tamanho padrão deste prato</button>
+      </div>`;
+    return;
+  }
+
+  // section-wide OR global — same full slider set, scoped target
+  let html = scopePicker;
+
+  if(!scoped) {
+    html += `
     <div class="ep-section">
       <div class="ep-section-title">Identidade Visual</div>
       <div class="ep-color-row">
@@ -1474,40 +1446,70 @@ function renderStyleTab() {
           oninput="styleConfig.qrCaption=this.value;updateQRBlock();saveState()">
       </div>
       <div style="font-size:9px;color:rgba(212,168,67,0.5);margin-top:6px">O QR é gerado por um serviço externo — é preciso estar online para ele aparecer.</div>
-    </div>
+    </div>`;
+  }
+
+  html += `
     <div class="ep-section">
-      <div class="ep-section-title">Nomes dos Itens</div>
+      <div class="ep-section-title">Nomes dos Itens${scoped?` — ${secLabel(ovSec)}`:''}</div>
       ${row('Tamanho', 'itemNameSize', 5, 16, 0.5)}
       ${row('Espaçamento letras', 'itemNameSpacing', -1, 5, 0.25, 'px')}
       ${row('Peso (400=normal 700=bold)', 'itemNameWeight', 400, 900, 100, '')}
     </div>
     <div class="ep-section">
-      <div class="ep-section-title">Preços</div>
+      <div class="ep-section-title">Preços${scoped?` — ${secLabel(ovSec)}`:''}</div>
       ${row('Tamanho', 'priceSize', 5, 16, 0.5)}
     </div>
     <div class="ep-section">
-      <div class="ep-section-title">Títulos de Seção</div>
+      <div class="ep-section-title">Título da Seção${scoped?` — ${secLabel(ovSec)}`:''}</div>
       ${row('Tamanho', 'sectionSize', 6, 20, 0.5)}
       ${row('Espaçamento letras', 'sectionSpacing', 0, 10, 0.5, 'px')}
     </div>
     <div class="ep-section">
-      <div class="ep-section-title">Textos Secundários</div>
+      <div class="ep-section-title">Textos Secundários${scoped?` — ${secLabel(ovSec)}`:''}</div>
       ${row('Descrições (.md)', 'descSize', 4, 12, 0.5)}
       ${row('Gramagem/subtítulo (.mw)', 'subSize', 4, 12, 0.5)}
-      ${row('Tagline (Bar & Rest.)', 'taglineSize', 4, 14, 0.5)}
-      ${row('Taxa de serviço', 'taxaSize', 4, 14, 0.5)}
+      ${!scoped ? row('Tagline (Bar & Rest.)', 'taglineSize', 4, 14, 0.5) : ''}
+      ${!scoped ? row('Taxa de serviço', 'taxaSize', 4, 14, 0.5) : ''}
     </div>
     <div class="ep-section">
-      <div class="ep-section-title">Layout & Espaçamento</div>
+      <div class="ep-section-title">Layout & Espaçamento${scoped?` — ${secLabel(ovSec)}`:''}</div>
       ${row('Espaço entre itens', 'itemSpacing', 0, 6, 0.25, 'mm')}
-      ${row('Tamanho do logo', 'logoSize', 32, 120, 4, 'px')}
-      ${row('Margens horizontais da página', 'pageMarginH', 6, 25, 1, 'mm')}
-      ${row('Margens verticais da página', 'pageMarginV', 6, 25, 1, 'mm')}
-    </div>
-    <div style="padding:10px 0">
-      <button class="ep-add-btn" onclick="resetStyles()">↺ Restaurar padrões</button>
-    </div>
-  `;
+      ${!scoped ? row('Tamanho do logo', 'logoSize', 32, 120, 4, 'px') : ''}
+      ${!scoped ? row('Margens horizontais da página', 'pageMarginH', 6, 25, 1, 'mm') : ''}
+      ${!scoped ? row('Margens verticais da página', 'pageMarginV', 6, 25, 1, 'mm') : ''}
+    </div>`;
+
+  if(scoped) {
+    html += `<div style="font-size:9px;color:rgba(212,168,67,0.5);padding:6px 0">Logo, margens da página, tagline e taxa de serviço são do documento inteiro — não dá pra variar por seção porque várias seções dividem a mesma página física.</div>`;
+  } else {
+    html += `<div style="padding:10px 0"><button class="ep-add-btn" onclick="resetStyles()">↺ Restaurar padrões</button></div>`;
+  }
+
+  body.innerHTML = html;
+}
+
+function sizeSliders(nameSize, priceSize) {
+  return `
+      <div class="ep-item" style="padding:12px;margin-top:10px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div class="ep-label" style="font-size:10px;color:#d4a843">Tamanho do nome</div>
+          <span id="ov-sv-name" style="font-family:'Playfair Display',serif;color:#e8dcc8;font-size:12px">${nameSize}pt</span>
+        </div>
+        <input type="range" min="5" max="20" step="0.5" value="${nameSize}"
+          style="width:100%;accent-color:#d4a843;cursor:pointer"
+          oninput="applyItemOverride('name',parseFloat(this.value));document.getElementById('ov-sv-name').textContent=this.value+'pt'">
+      </div>
+
+      <div class="ep-item" style="padding:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div class="ep-label" style="font-size:10px;color:#d4a843">Tamanho do preço</div>
+          <span id="ov-sv-price" style="font-family:'Playfair Display',serif;color:#e8dcc8;font-size:12px">${priceSize}pt</span>
+        </div>
+        <input type="range" min="5" max="20" step="0.5" value="${priceSize}"
+          style="width:100%;accent-color:#d4a843;cursor:pointer"
+          oninput="applyItemOverride('price',parseFloat(this.value));document.getElementById('ov-sv-price').textContent=this.value+'pt'">
+      </div>`;
 }
 
 function resetStyles() {
@@ -1778,6 +1780,9 @@ function deleteItem(sec, idx) {
 function applyAll() {
   const tabs = getTabSections();
   tabs.forEach(sec => {
+    const noteEl = document.getElementById(`ei-secnote-${sec}`);
+    if(noteEl) setSecNote(sec, noteEl.value);
+
     getSectionData(sec).forEach((item, i) => {
       const nameEl = document.getElementById(`ei-name-${sec}-${i}`);
       const priceEl = document.getElementById(`ei-price-${sec}-${i}`);
@@ -1869,6 +1874,25 @@ function applyToMenu() {
 
   // CUSTOM SECTIONS (extra page)
   renderExtraPage();
+
+  // SECTION NOTES (fixed sections)
+  renderSectionNotes();
+}
+
+function renderSectionNotes() {
+  baseTabSections.forEach(sec => {
+    const title = document.getElementById(`stitle-${sec}`);
+    if(!title) return;
+    let note = title.nextElementSibling;
+    if(!note || !note.classList.contains('sec-note')) {
+      note = document.createElement('p');
+      note.className = 'sec-note';
+      title.insertAdjacentElement('afterend', note);
+    }
+    const text = sectionNotes[sec] || '';
+    note.textContent = text;
+    note.classList.toggle('has-text', !!text);
+  });
 }
 
 function renderExtraPage() {
@@ -1882,7 +1906,8 @@ function renderExtraPage() {
   page.style.display = '';
   container.innerHTML = customSections.map(sec => `
     <div class="custom-box">
-      <div class="stitle" style="margin:0 0 3mm"><h2>${escHtml(sec.title)}</h2></div>
+      <div class="stitle" id="stitle-${sec.id}" style="margin:0 0 3mm"><h2>${escHtml(sec.title)}</h2></div>
+      ${getSecNote(sec.id) ? `<p class="sec-note has-text">${escHtml(getSecNote(sec.id))}</p>` : ''}
       ${sec.items.map((item,i) => `
         <div class="mi${item.esgotado?' esgotado':''}" style="${item.desc?'align-items:flex-start;margin-bottom:2mm':''}" data-section="${sec.id}" data-idx="${i}">
           <div class="mi-top">
