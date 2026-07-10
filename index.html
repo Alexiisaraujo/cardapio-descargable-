@@ -477,6 +477,74 @@ body.t-kraft .logo-wrap img { mix-blend-mode:normal; filter:none; }
 }
 .ep-file-btn:hover{background:rgba(212,168,67,0.1)}
 
+/* TEXTURE BACKGROUNDS */
+.page::before{
+  content:'';position:absolute;inset:0;pointer-events:none;opacity:0;
+}
+body.tex-paper .page::before{
+  opacity:.5;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(0,0,0,.03) 0, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(0,0,0,.025) 0, transparent 45%),
+    repeating-radial-gradient(circle at 50% 50%, rgba(0,0,0,.02) 0 1px, transparent 1px 3px);
+}
+body.tex-linen .page::before{
+  opacity:.4;
+  background-image:
+    repeating-linear-gradient(45deg, rgba(0,0,0,.04) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(-45deg, rgba(0,0,0,.04) 0 1px, transparent 1px 4px);
+}
+
+/* CORNER ORNAMENT STYLES */
+body.crn-square .crn svg{display:none}
+body.crn-square .crn::after{
+  content:'';position:absolute;top:0;left:0;width:16px;height:16px;
+  border-top:2px solid var(--gold);border-left:2px solid var(--gold);
+}
+body.crn-dots .crn svg{display:none}
+body.crn-dots .crn::after{
+  content:'';position:absolute;top:3px;left:3px;width:5px;height:5px;
+  border-radius:50%;background:var(--gold);opacity:.8;
+}
+body.crn-none .crn{display:none}
+
+/* PAGE FOOTER (page number + last update) */
+.page-footer{
+  display:none;justify-content:space-between;align-items:center;
+  margin-top:3mm;padding-top:2mm;border-top:1px solid rgba(184,146,42,.2);
+  font-family:var(--f-accent);font-style:italic;font-size:6pt;
+  color:var(--gold);opacity:.65;
+}
+body.show-footer .page-footer{display:flex}
+
+/* QR BLOCK */
+.qr-block{
+  display:none;align-items:center;justify-content:center;gap:4mm;
+  margin-top:4mm;padding:3mm;border:1px solid rgba(184,146,42,.25);
+}
+body.show-qr .qr-block{display:flex}
+.qr-block img{width:22mm;height:22mm;background:#fff;padding:1mm}
+.qr-caption{font-family:var(--f-accent);font-style:italic;font-size:7.5pt;color:var(--gold);max-width:45mm;text-align:left}
+
+/* SECTION NOTE */
+.sec-note{
+  text-align:center;font-family:var(--f-accent);font-style:italic;
+  font-size:6.5pt;color:var(--gold2);margin:-1mm 0 3mm;display:none;
+}
+.sec-note.has-text{display:block}
+
+/* EDITOR — extra style-tab controls */
+.ep-choice-row{display:flex;gap:6px;flex-wrap:wrap}
+.ep-choice-btn{
+  padding:6px 11px;border:1.5px solid rgba(212,168,67,0.3);
+  background:transparent;color:#d4a843;font-family:'Libre Baskerville',serif;
+  font-size:9.5px;cursor:pointer;border-radius:2px;transition:all .2s;
+}
+.ep-choice-btn:hover{background:rgba(212,168,67,0.1);border-color:#d4a843}
+.ep-choice-btn.on{background:#d4a843;color:#1a1208;font-weight:700}
+.ep-toggle-row{display:flex;align-items:center;gap:8px;padding:8px 0;cursor:pointer}
+.ep-toggle-row input{accent-color:#d4a843;width:14px;height:14px;cursor:pointer}
+
 /* PRINT */
 @page{
   size:A4;
@@ -508,6 +576,7 @@ body.t-kraft .logo-wrap img { mix-blend-mode:normal; filter:none; }
 #notify.show{transform:translateX(-50%) translateY(0)}
 </style>
 <style id="dynamic-styles"></style>
+<style id="section-dyn-styles"></style>
 </head>
 <body class="t-vintage">
 
@@ -576,7 +645,7 @@ body.t-kraft .logo-wrap img { mix-blend-mode:normal; filter:none; }
     <div class="tagline">Bar &amp; Restaurante</div>
   </div>
 
-  <div class="stitle"><h2>Almoço</h2></div>
+  <div class="stitle" id="stitle-almoco"><h2>Almoço</h2></div>
   <p class="ssub">Acompanhamento padrão: Arroz · Feijão · Salada · Fritas · Farofa</p>
   <p class="choose">— Escolha sua proteína —</p>
 
@@ -650,7 +719,7 @@ body.t-kraft .logo-wrap img { mix-blend-mode:normal; filter:none; }
 
   <div class="split">
     <div class="split-col">
-      <div class="stitle"><h2 style="font-size:10pt">Sanduíche</h2></div>
+      <div class="stitle" id="stitle-sanduiche"><h2 style="font-size:10pt">Sanduíche</h2></div>
       <div id="sanduiche-list">
         <div class="mi" style="align-items:flex-start;margin-bottom:3mm" data-section="sanduiche" data-idx="0">
           <div class="mi-top">
@@ -691,7 +760,7 @@ body.t-kraft .logo-wrap img { mix-blend-mode:normal; filter:none; }
     </div>
 
     <div class="split-col">
-      <div class="stitle"><h2 style="font-size:10pt">Porções</h2></div>
+      <div class="stitle" id="stitle-porcoes"><h2 style="font-size:10pt">Porções</h2></div>
       <div id="porcoes-list">
         <div class="mi" data-section="porcoes" data-idx="0"><div class="mi-top"><div class="mn">Batata Frita</div><div class="mw">Porção 400g</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
         <div class="mi" data-section="porcoes" data-idx="1"><div class="mi-top"><div class="mn">Batata Frita</div><div class="mw">Meia porção 200g</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
@@ -747,7 +816,7 @@ body.t-kraft .logo-wrap img { mix-blend-mode:normal; filter:none; }
   <div class="drinks-grid">
     <div class="drinks-col">
       <div class="dcol-box">
-        <div class="stitle" style="margin:0 0 3mm"><h2 style="font-size:9pt">Cervejas</h2></div>
+        <div class="stitle" id="stitle-cervejas" style="margin:0 0 3mm"><h2 style="font-size:9pt">Cervejas</h2></div>
         <div id="cervejas-list">
           <div class="mi sm" data-section="cervejas" data-idx="0"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Brahma 600ml</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
           <div class="mi sm" data-section="cervejas" data-idx="1"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Budweiser 600ml</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
@@ -762,7 +831,7 @@ body.t-kraft .logo-wrap img { mix-blend-mode:normal; filter:none; }
         </div>
       </div>
       <div class="dcol-box">
-        <div class="stitle" style="margin:0 0 3mm"><h2 style="font-size:9pt">Doses</h2></div>
+        <div class="stitle" id="stitle-doses" style="margin:0 0 3mm"><h2 style="font-size:9pt">Doses</h2></div>
         <div id="doses-list">
           <div class="mi sm" data-section="doses" data-idx="0"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Cachaça</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
           <div class="mi sm" data-section="doses" data-idx="1"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Campari</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
@@ -779,7 +848,7 @@ body.t-kraft .logo-wrap img { mix-blend-mode:normal; filter:none; }
 
     <div class="drinks-col">
       <div class="dcol-box">
-        <div class="stitle" style="margin:0 0 3mm"><h2 style="font-size:9pt">Bebidas</h2></div>
+        <div class="stitle" id="stitle-bebidas" style="margin:0 0 3mm"><h2 style="font-size:9pt">Bebidas</h2></div>
         <div id="bebidas-list">
           <div class="mi sm" data-section="bebidas" data-idx="0"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Água sem gás</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
           <div class="mi sm" data-section="bebidas" data-idx="1"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Água com gás</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
@@ -796,7 +865,7 @@ body.t-kraft .logo-wrap img { mix-blend-mode:normal; filter:none; }
         </div>
       </div>
       <div class="dcol-box">
-        <div class="stitle" style="margin:0 0 2mm"><h2 style="font-size:9pt">Drinks</h2></div>
+        <div class="stitle" id="stitle-drinks" style="margin:0 0 2mm"><h2 style="font-size:9pt">Drinks</h2></div>
         <div class="caip">Caipiras:</div>
         <div id="drinks-list">
           <div class="mi sm" data-section="drinks" data-idx="0"><div class="mi-top"><div class="mn" style="font-size:7.5pt">Cachaça</div></div><div class="pline"><span class="dots"></span><span class="price-display"></span></div></div>
@@ -817,6 +886,8 @@ body.t-kraft .logo-wrap img { mix-blend-mode:normal; filter:none; }
     <div class="chopp-t">— Chopp —</div>
     <div class="chopp-d">10 torneiras de chopp artesanal · Consulte nosso taplist</div>
   </div>
+
+  <div class="qr-block" id="qr-block"></div>
 
   <div class="taxa">
     <div class="taxa-inner">
@@ -866,6 +937,8 @@ const sections = {
 };
 let customSections = []; // [{id,title,items:[{name,desc,price,dots,esgotado,badges}]}]
 let customLogo = null; // dataURL or null
+let sectionNotes = {}; // {sec: 'texto livre'}
+let sectionStyleOverrides = {}; // {sec: {scale: 1.25}} — escala tudo (nome/desc/gramagem/preço/espaço) daquela seção
 const BADGE_OPTS = [
   {key:'picante', icon:'🌶️', label:'Picante'},
   {key:'vegano',  icon:'🌱', label:'Vegano'},
@@ -956,7 +1029,7 @@ const STORAGE_KEY = 'boteco-municipal-cardapio';
 
 function collectState() {
   return {
-    sections, customSections, customLogo,
+    sections, customSections, customLogo, sectionNotes, sectionStyleOverrides,
     theme: document.body.className.match(/t-\w+/)?.[0] || 't-vintage',
     font: document.body.className.match(/f-\w+/)?.[0] || '',
     styleConfig,
@@ -984,6 +1057,8 @@ function applyState(data) {
   if(data.sections) Object.assign(sections, data.sections);
   if(data.customSections) customSections = data.customSections;
   if(data.customLogo) customLogo = data.customLogo;
+  if(data.sectionNotes) sectionNotes = data.sectionNotes;
+  if(data.sectionStyleOverrides) sectionStyleOverrides = data.sectionStyleOverrides;
   if(data.styleConfig) Object.assign(styleConfig, data.styleConfig);
   if(data.theme) {
     document.body.className = document.body.className.replace(/t-\w+/,'').trim() + ' ' + data.theme;
@@ -1106,6 +1181,13 @@ const styleConfig = {
   pageMarginH:     12,
   pageMarginV:     14,
   customColor:     '',
+  texture:         'none',   // none | paper | linen
+  cornerStyle:     'classic', // classic | square | dots | none
+  showFooter:      false,
+  footerText:      '',       // optional custom text (e.g. "Cardápio válido enquanto durarem os estoques")
+  qrEnabled:       false,
+  qrUrl:           '',
+  qrCaption:       'Siga-nos no Instagram',
 };
 
 function applyDynStyles() {
@@ -1126,6 +1208,183 @@ function applyDynStyles() {
     .page { padding:${s.pageMarginV}mm ${s.pageMarginH}mm !important; }
     ${colorOverride}
   `;
+
+  document.body.className = document.body.className.replace(/\btex-\w+\b/g,'').replace(/\bcrn-\w+\b/g,'').replace(/\bshow-footer\b/g,'').replace(/\bshow-qr\b/g,'').trim();
+  if(s.texture && s.texture !== 'none') document.body.className += ' tex-' + s.texture;
+  if(s.cornerStyle && s.cornerStyle !== 'classic') document.body.className += ' crn-' + s.cornerStyle;
+  if(s.showFooter) document.body.className += ' show-footer';
+  if(s.qrEnabled) document.body.className += ' show-qr';
+
+  ensureFooters();
+  updateFooters();
+  updateQRBlock();
+  applySectionStyles();
+}
+
+// ============ PER-SECTION SCALE OVERRIDE ============
+function applySectionStyles() {
+  const s = styleConfig;
+  let css = '';
+  Object.keys(sectionStyleOverrides).forEach(sec => {
+    const ov = sectionStyleOverrides[sec];
+    if(!ov || !ov.scale || ov.scale === 1) return;
+    const scale = ov.scale;
+    const sel = `.mi[data-section="${sec}"]`;
+    css += `
+      ${sel} .mn { font-size:${(s.itemNameSize*scale).toFixed(2)}pt !important; }
+      ${sel} .md { font-size:${(s.descSize*scale).toFixed(2)}pt !important; }
+      ${sel} .mw { font-size:${(s.subSize*scale).toFixed(2)}pt !important; }
+      ${sel} .price-display { font-size:${(s.priceSize*scale).toFixed(2)}pt !important; }
+      ${sel} { margin-bottom:${(s.itemSpacing*scale).toFixed(2)}mm !important; }
+    `;
+  });
+  const el = document.getElementById('section-dyn-styles');
+  if(el) el.textContent = css;
+}
+
+// ============ PAGE FOOTER ============
+function ensureFooters() {
+  document.querySelectorAll('.page .frame').forEach(frame => {
+    if(!frame.querySelector('.page-footer')) {
+      const div = document.createElement('div');
+      div.className = 'page-footer';
+      div.innerHTML = '<span class="pf-text"></span><span class="pf-page"></span>';
+      frame.appendChild(div);
+    }
+  });
+}
+
+function updateFooters() {
+  const s = styleConfig;
+  const visiblePages = [...document.querySelectorAll('.page')].filter(p => p.style.display !== 'none');
+  const dateStr = new Date().toLocaleDateString('pt-BR');
+  const baseText = s.footerText ? s.footerText : `Atualizado em ${dateStr}`;
+  visiblePages.forEach((page, i) => {
+    const footer = page.querySelector('.page-footer');
+    if(!footer) return;
+    footer.querySelector('.pf-text').textContent = baseText;
+    footer.querySelector('.pf-page').textContent = `${i+1} / ${visiblePages.length}`;
+  });
+}
+
+// ============ QR BLOCK ============
+function updateQRBlock() {
+  const s = styleConfig;
+  const el = document.getElementById('qr-block');
+  if(!el) return;
+  if(!s.qrEnabled || !s.qrUrl) { el.innerHTML = ''; return; }
+  const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(s.qrUrl)}`;
+  el.innerHTML = `<img src="${qrImgUrl}" alt="QR Code" loading="lazy"><div class="qr-caption">${escHtml(s.qrCaption)}</div>`;
+}
+
+function renderItemOverridePanel() {
+  const tabs = getTabSections();
+  if(!tabs.includes(ovSec)) ovSec = tabs[0];
+  const data = getSectionData(ovSec);
+  if(ovIdx >= data.length) ovIdx = 0;
+
+  const secOptions = tabs.map(s => `<option value="${s}" ${s===ovSec?'selected':''}>${secLabel(s)}</option>`).join('');
+
+  const modeRow = `
+    <div class="ep-choice-row" style="margin-top:10px">
+      <button class="ep-choice-btn${ovMode==='section'?' on':''}" onclick="ovMode='section';renderStyleTab()">Toda a seção</button>
+      <button class="ep-choice-btn${ovMode==='item'?' on':''}" onclick="ovMode='item';renderStyleTab()">Um prato específico</button>
+    </div>`;
+
+  const secSelect = `
+    <div class="ep-field" style="margin-top:10px">
+      <div class="ep-label">Seção</div>
+      <select class="ep-input" onchange="ovSec=this.value;ovIdx=0;renderStyleTab()">${secOptions}</select>
+    </div>`;
+
+  if(ovMode === 'item') {
+    if(!data.length) return secSelect + modeRow + `<div style="padding:10px 0;font-size:10px;color:rgba(212,168,67,0.6)">Essa seção não tem itens ainda.</div>`;
+    const item = data[ovIdx];
+    const itemOptions = data.map((it,i) => `<option value="${i}" ${i===ovIdx?'selected':''}>${escHtml(it.name)}</option>`).join('');
+    const nameSize = item.nameSize || styleConfig.itemNameSize;
+    const priceSize = item.priceSize || styleConfig.priceSize;
+    return secSelect + modeRow + `
+      <div class="ep-field" style="margin-top:8px">
+        <div class="ep-label">Prato / Item</div>
+        <select class="ep-input" onchange="ovIdx=parseInt(this.value);renderStyleTab()">${itemOptions}</select>
+      </div>
+      ${sizeSliders(nameSize, priceSize)}
+      <button class="ep-add-btn" onclick="clearItemOverride()">↺ Restaurar tamanho padrão deste prato</button>`;
+  }
+
+  // section-wide mode
+  const scalePct = Math.round(((sectionStyleOverrides[ovSec] && sectionStyleOverrides[ovSec].scale) || 1) * 100);
+  return secSelect + modeRow + `
+      <div style="font-size:9px;color:rgba(212,168,67,0.5);margin:6px 0">Escala tudo junto — nome, descrição, gramagem, preço e espaço entre pratos — só nesta seção. Ideal quando sobra espaço em branco na página.</div>
+      <div class="ep-item" style="padding:12px;margin-top:6px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div class="ep-label" style="font-size:10px;color:#d4a843">Escala geral desta seção</div>
+          <span id="ov-sv-scale" style="font-family:'Playfair Display',serif;color:#e8dcc8;font-size:12px">${scalePct}%</span>
+        </div>
+        <input type="range" min="80" max="200" step="5" value="${scalePct}"
+          style="width:100%;accent-color:#d4a843;cursor:pointer"
+          oninput="applySectionScale(parseInt(this.value));document.getElementById('ov-sv-scale').textContent=this.value+'%'">
+      </div>
+      <button class="ep-add-btn" onclick="clearSectionScale()">↺ Restaurar escala padrão desta seção</button>`;
+}
+
+function sizeSliders(nameSize, priceSize) {
+  return `
+      <div class="ep-item" style="padding:12px;margin-top:10px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div class="ep-label" style="font-size:10px;color:#d4a843">Tamanho do nome</div>
+          <span id="ov-sv-name" style="font-family:'Playfair Display',serif;color:#e8dcc8;font-size:12px">${nameSize}pt</span>
+        </div>
+        <input type="range" min="5" max="20" step="0.5" value="${nameSize}"
+          style="width:100%;accent-color:#d4a843;cursor:pointer"
+          oninput="applyItemOverride('name',parseFloat(this.value));document.getElementById('ov-sv-name').textContent=this.value+'pt'">
+      </div>
+
+      <div class="ep-item" style="padding:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div class="ep-label" style="font-size:10px;color:#d4a843">Tamanho do preço</div>
+          <span id="ov-sv-price" style="font-family:'Playfair Display',serif;color:#e8dcc8;font-size:12px">${priceSize}pt</span>
+        </div>
+        <input type="range" min="5" max="20" step="0.5" value="${priceSize}"
+          style="width:100%;accent-color:#d4a843;cursor:pointer"
+          oninput="applyItemOverride('price',parseFloat(this.value));document.getElementById('ov-sv-price').textContent=this.value+'pt'">
+      </div>`;
+}
+
+function applySectionScale(pct) {
+  if(!ovSec) return;
+  sectionStyleOverrides[ovSec] = { scale: pct / 100 };
+  applySectionStyles();
+  saveState();
+}
+
+function clearSectionScale() {
+  if(!ovSec) return;
+  delete sectionStyleOverrides[ovSec];
+  applySectionStyles();
+  saveState();
+  renderStyleTab();
+}
+
+function applyItemOverride(kind, value) {
+  const data = getSectionData(ovSec);
+  const item = data[ovIdx];
+  if(!item) return;
+  if(kind === 'name') item.nameSize = value;
+  if(kind === 'price') item.priceSize = value;
+  applyToMenu();
+  saveState();
+}
+
+function clearItemOverride() {
+  const data = getSectionData(ovSec);
+  const item = data[ovIdx];
+  if(!item) return;
+  delete item.nameSize;
+  delete item.priceSize;
+  applyToMenu();
+  saveState();
+  renderStyleTab();
 }
 
 function renderStyleTab() {
@@ -1143,7 +1402,23 @@ function renderStyleTab() {
         oninput="styleConfig['${key}']=parseFloat(this.value);document.getElementById('sv-${key}').textContent=this.value+'${unit}';applyDynStyles();saveState()">
     </div>`;
 
+  const choice = (options, key, onChangeExtra='') => `
+    <div class="ep-choice-row">
+      ${options.map(o => `<button class="ep-choice-btn${s[key]===o.value?' on':''}" onclick="styleConfig['${key}']='${o.value}';applyDynStyles();saveState();${onChangeExtra}renderStyleTab()">${o.label}</button>`).join('')}
+    </div>`;
+
   body.innerHTML = `
+    <div class="ep-section">
+      <div class="ep-section-title">Escopo do Ajuste</div>
+      <div class="ep-choice-row">
+        <button class="ep-choice-btn${ovSec===null?' on':''}" onclick="ovSec=null;renderStyleTab()">Todas as páginas</button>
+        <button class="ep-choice-btn${ovSec!==null?' on':''}" onclick="ovSec=ovSec||getTabSections()[0];ovMode='section';renderStyleTab()">Página específica</button>
+      </div>
+      <div style="font-size:9px;color:rgba(212,168,67,0.5);margin-top:6px">
+        ${ovSec===null ? 'Os controles abaixo (tamanhos, cores etc.) valem para o cardápio inteiro.' : 'Por padrão ajusta a seção inteira — dá pra afinar um prato específico logo abaixo, se precisar.'}
+      </div>
+      ${ovSec !== null ? renderItemOverridePanel() : ''}
+    </div>
     <div class="ep-section">
       <div class="ep-section-title">Identidade Visual</div>
       <div class="ep-color-row">
@@ -1161,6 +1436,44 @@ function renderStyleTab() {
           <input type="file" accept="image/*" style="display:none" onchange="handleLogoUpload(this)">
         </label>
       </div>
+    </div>
+    <div class="ep-section">
+      <div class="ep-section-title">Textura de Fundo</div>
+      ${choice([{value:'none',label:'Nenhuma'},{value:'paper',label:'Papel'},{value:'linen',label:'Linho'}], 'texture')}
+    </div>
+    <div class="ep-section">
+      <div class="ep-section-title">Estilo das Esquinas</div>
+      ${choice([{value:'classic',label:'Clássico'},{value:'square',label:'Quadrado'},{value:'dots',label:'Pontilhado'},{value:'none',label:'Nenhum'}], 'cornerStyle')}
+    </div>
+    <div class="ep-section">
+      <div class="ep-section-title">Rodapé da Página</div>
+      <label class="ep-toggle-row">
+        <input type="checkbox" ${s.showFooter?'checked':''} onchange="styleConfig.showFooter=this.checked;applyDynStyles();saveState()">
+        Mostrar rodapé (data + número de página)
+      </label>
+      <div class="ep-field" style="margin-top:6px">
+        <div class="ep-label">Texto customizado (opcional)</div>
+        <input class="ep-input" value="${escHtml(s.footerText)}" placeholder="Ex: Cardápio sujeito a alterações"
+          oninput="styleConfig.footerText=this.value;updateFooters();saveState()">
+      </div>
+    </div>
+    <div class="ep-section">
+      <div class="ep-section-title">Código QR</div>
+      <label class="ep-toggle-row">
+        <input type="checkbox" ${s.qrEnabled?'checked':''} onchange="styleConfig.qrEnabled=this.checked;applyDynStyles();saveState()">
+        Mostrar QR Code (aparece na página de bebidas)
+      </label>
+      <div class="ep-field" style="margin-top:6px">
+        <div class="ep-label">Link (Instagram, delivery, etc)</div>
+        <input class="ep-input" value="${escHtml(s.qrUrl)}" placeholder="https://instagram.com/seu_bar"
+          oninput="styleConfig.qrUrl=this.value;updateQRBlock();saveState()">
+      </div>
+      <div class="ep-field" style="margin-top:6px">
+        <div class="ep-label">Legenda</div>
+        <input class="ep-input" value="${escHtml(s.qrCaption)}" placeholder="Siga-nos no Instagram"
+          oninput="styleConfig.qrCaption=this.value;updateQRBlock();saveState()">
+      </div>
+      <div style="font-size:9px;color:rgba(212,168,67,0.5);margin-top:6px">O QR é gerado por um serviço externo — é preciso estar online para ele aparecer.</div>
     </div>
     <div class="ep-section">
       <div class="ep-section-title">Nomes dos Itens</div>
@@ -1203,7 +1516,8 @@ function resetStyles() {
     priceSize:8.0, sectionSize:10.5, sectionSpacing:3,
     descSize:6.5, subSize:6.5, taglineSize:7.5, taxaSize:8.0,
     itemSpacing:1.8, logoSize:72, pageMarginH:12, pageMarginV:14,
-    customColor:'',
+    customColor:'', texture:'none', cornerStyle:'classic',
+    showFooter:false, footerText:'', qrEnabled:false, qrUrl:'', qrCaption:'Siga-nos no Instagram',
   });
   applyDynStyles();
   saveState();
@@ -1213,6 +1527,9 @@ function resetStyles() {
 // ============ PANEL ============
 let panelOpen = false;
 let currentTab = 0;
+let ovSec = null;   // selected section for individual/section adjustment
+let ovIdx = 0;      // selected item index within that section (only used in 'item' mode)
+let ovMode = 'section'; // 'section' = whole section, 'item' = single dish
 
 function getTabSections() {
   return baseTabSections.concat(customSections.map(s=>s.id));
@@ -1282,6 +1599,23 @@ function getSectionData(sec) {
 }
 
 // ============ RENDER EDITOR TAB ============
+function getSecNote(sec) {
+  if(sec.startsWith('custom_')) {
+    const c = customSections.find(s=>s.id===sec);
+    return c ? (c.note||'') : '';
+  }
+  return sectionNotes[sec] || '';
+}
+
+function setSecNote(sec, val) {
+  if(sec.startsWith('custom_')) {
+    const c = customSections.find(s=>s.id===sec);
+    if(c) c.note = val;
+  } else {
+    sectionNotes[sec] = val;
+  }
+}
+
 function renderTab(idx) {
   const tabs = getTabSections();
   const sec = tabs[idx];
@@ -1293,7 +1627,11 @@ function renderTab(idx) {
   const hasSub = sec === 'almoco' || sec === 'porcoes';
 
   let html = `<div class="ep-section">
-    <div class="ep-section-title">${secLabel(sec)}</div>`;
+    <div class="ep-section-title">${secLabel(sec)}</div>
+    <div class="ep-field" style="margin-bottom:12px">
+      <div class="ep-label">Nota/aviso da seção (opcional)</div>
+      <input class="ep-input" id="ei-secnote-${sec}" value="${escHtml(getSecNote(sec))}" placeholder="Ex: Promoção às terças-feiras">
+    </div>`;
 
   data.forEach((item, i) => {
     const dotsOn = item.dots !== false;
@@ -1467,6 +1805,11 @@ function applyAll() {
   showNotify();
 }
 
+function nameStyleAttr(item, defaultSize) {
+  const size = item.nameSize || defaultSize;
+  return size ? ` style="font-size:${size}pt !important"` : '';
+}
+
 function badgesHtml(item) {
   const badges = item.badges || [];
   if(!badges.length) return '';
@@ -1481,7 +1824,7 @@ function applyToMenu() {
   rebuildList('almoco-list', sections.almoco, 'almoco', (item,i) => `
     <div class="mi${item.esgotado?' esgotado':''}" data-section="almoco" data-idx="${i}">
       <div class="mi-top">
-        <div class="mn">${item.name}${badgesHtml(item)}</div>
+        <div class="mn"${nameStyleAttr(item)}>${item.name}${badgesHtml(item)}</div>
         ${item.sub ? `<div class="mw">${item.sub}</div>` : ''}
       </div>
       ${priceBlock(item)}
@@ -1495,7 +1838,7 @@ function applyToMenu() {
   rebuildList('sanduiche-list', sections.sanduiche, 'sanduiche', (item,i) => `
     <div class="mi${item.esgotado?' esgotado':''}" style="align-items:flex-start;margin-bottom:3mm" data-section="sanduiche" data-idx="${i}">
       <div class="mi-top">
-        <div class="mn">${item.name}${badgesHtml(item)}</div>
+        <div class="mn"${nameStyleAttr(item)}>${item.name}${badgesHtml(item)}</div>
         ${item.desc ? `<div class="md">${item.desc}</div>` : ''}
       </div>
       ${priceBlock(item, 'margin-top:2px')}
@@ -1507,7 +1850,7 @@ function applyToMenu() {
     return `
       <div class="mi${item.esgotado?' esgotado':''}" style="${looksDescOnly ? 'align-items:flex-start;margin-bottom:2mm' : ''}" data-section="porcoes" data-idx="${i}">
         <div class="mi-top">
-          <div class="mn">${item.name}${badgesHtml(item)}</div>
+          <div class="mn"${nameStyleAttr(item)}>${item.name}${badgesHtml(item)}</div>
           ${item.sub ? `<div class="mw">${item.sub}</div>` : ''}
           ${item.desc ? `<div class="md">${item.desc}</div>` : ''}
         </div>
@@ -1543,7 +1886,7 @@ function renderExtraPage() {
       ${sec.items.map((item,i) => `
         <div class="mi${item.esgotado?' esgotado':''}" style="${item.desc?'align-items:flex-start;margin-bottom:2mm':''}" data-section="${sec.id}" data-idx="${i}">
           <div class="mi-top">
-            <div class="mn">${item.name}${badgesHtml(item)}</div>
+            <div class="mn"${nameStyleAttr(item)}>${item.name}${badgesHtml(item)}</div>
             ${item.desc ? `<div class="md">${item.desc}</div>` : ''}
           </div>
           ${priceBlock(item, item.desc ? 'margin-top:2px' : '')}
@@ -1552,14 +1895,16 @@ function renderExtraPage() {
 }
 
 function priceBlock(item, extraStyle) {
-  const style = extraStyle ? ` style="${extraStyle}"` : '';
+  const outerStyle = extraStyle ? ` style="${extraStyle}"` : '';
+  const sizeDecl = item.priceSize ? `font-size:${item.priceSize}pt !important` : '';
   if(item.esgotado) {
-    return `<span class="esgotado-label"${style}>Esgotado</span>`;
+    return `<span class="esgotado-label"${outerStyle}>Esgotado</span>`;
   }
   if(item.dots === false) {
-    return `<span class="price-display"${style}>${fmtPrice(item.price)}</span>`;
+    const combined = [extraStyle, sizeDecl].filter(Boolean).join(';');
+    return `<span class="price-display"${combined ? ` style="${combined}"` : ''}>${fmtPrice(item.price)}</span>`;
   }
-  return `<div class="pline"${style}><span class="dots"></span><span class="price-display">${fmtPrice(item.price)}</span></div>`;
+  return `<div class="pline"${outerStyle}><span class="dots"></span><span class="price-display"${sizeDecl ? ` style="${sizeDecl}"` : ''}>${fmtPrice(item.price)}</span></div>`;
 }
 
 function rebuildList(listId, items, sec, tplFn) {
@@ -1573,7 +1918,7 @@ function rebuildListSm(listId, items, sec) {
   if(!el) return;
   el.innerHTML = items.map((item,i) => `
     <div class="mi sm${item.esgotado?' esgotado':''}" data-section="${sec}" data-idx="${i}">
-      <div class="mi-top"><div class="mn" style="font-size:7.5pt">${item.name}${badgesHtml(item)}</div></div>
+      <div class="mi-top"><div class="mn"${nameStyleAttr(item, 7.5)}>${item.name}${badgesHtml(item)}</div></div>
       ${priceBlock(item)}
     </div>`).join('');
 }
